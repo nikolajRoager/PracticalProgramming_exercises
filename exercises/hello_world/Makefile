@@ -1,16 +1,18 @@
 Compiler = mcs
-CSflags =-optimize+ -platform:arm
+CSflags =-optimize+
 
+#I can't place literal tabs, tab default to space x4. This seems better
 .RECIPEPREFIX := ;
-#I always had a hard time placing those literal tabs, this seems better
+#I want make to update if i change the makefile
 
-out.txt : hello.exe
+out.txt : hello.exe Makefile
 ;mono hello.exe > out.txt
 
-hello.exe : hello.cs #Dependency, if hello.cs has changed this will be re-run
+hello.exe : hello.cs  Makefile#Dependency, if hello.cs has changed this will be re-run
 ;$(Compiler) hello.cs -out:hello.exe $(CSflags)
 # On Linux there is no strong standard for what to call executables, I often use .app because I used to use mac, but lets go with .exe
 
+.PHONY : clean
 clean:# a phoney target, can be used to run any commands
 ;rm -f out.txt hello.exe
 # remove secondary files
