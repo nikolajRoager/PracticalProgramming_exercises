@@ -1,0 +1,9 @@
+Demonstrating vectors
+u=[1, 0, 0]
+Print with no argument
+[1, 0, 0]
+print(u)
+[1, 0, 0]
+u=[0, 1, 0]
+u+v=[1, 1, 0]
+u-v=[-1, 1, 0]
