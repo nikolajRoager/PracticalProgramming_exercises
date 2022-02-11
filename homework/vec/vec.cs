@@ -8,7 +8,9 @@ public class vec
 
     public vec()
     {
-        x=0;y=0;z=0;
+        x=0;
+        y=0;
+        z=0;
     }
     public vec(double _x,double _y,double _z)
     {
