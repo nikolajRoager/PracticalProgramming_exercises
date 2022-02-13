@@ -1,9 +1,25 @@
-Demonstrating vectors
-(from u.print) u=[1, 0, 0]
+Testing the vector class
+Testing various printing functions
+(from v.print) v=[-0.4419851942269, 0.197069569539035, 0.875107235055172]
 Print with no argument
-[1, 0, 0]
-vec.print(u)
-[1, 0, 0]
-u=[0, 0, 0]
-u+v=[1, 0, 0]
-u-v=[-1, 0, 0]
+[-0.4419851942269, 0.197069569539035, 0.875107235055172]
+vec.print(v)
+[-0.4419851942269, 0.197069569539035, 0.875107235055172]
+using vec.ToString() implicitly [-0.4419851942269,0.197069569539035,0.875107235055172]
+Testing --v=v ...passed
+
+Testing v+u=u+v ...passed
+
+Testing c*v=v*c ...passed
+
+Testing c*v/c=v ...passed
+
+Testing dot(v,u)=v.dot(u) ...passed
+
+Testing dot(v,u+w)=dot(v,u)+dot(v,w) ...passed
+
+Testing dot(-v,u)=dot(-v,u)=-dot(v,u) ...passed
+
+Testing cross(v,u)=-cross(u,v) ...passed
+
+all tests passed

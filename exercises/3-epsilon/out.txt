@@ -1,0 +1,10 @@
+my max int = 2147483647
+verify 2147483647+1 = -2147483648
+
+double epsilon = 2.22044604925031E-16, compare to 2^-52=2.22044604925031E-16
+float epsilon = 1.192093E-07, compare to 2^-23=1.19209289550781E-07
+sumA-1 = 0.000000e+000 should be -2.384186e-007
+sumB-1 = 1.110223e-010 should be -2.384186e-007
+1.0 approx 1.0
+1.1 is not 1.0
+1.0+tiny approx 1.0
