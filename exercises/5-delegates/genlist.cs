@@ -8,7 +8,7 @@ public class genlist<T>
     }
 
     //Specify where we push
-    public void push_back(T item)
+    public void push(T item)
     {
         int n = data.Length;
         T[] newdata = new T[n+1];
