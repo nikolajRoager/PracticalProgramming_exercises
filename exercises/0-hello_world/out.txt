@@ -1,0 +1,2 @@
+Hello world, Lets see how well this handles extended unicode:
+μῆνιν ἄειδε θεὰ Πηληϊάδεω Ἀχιλῆος

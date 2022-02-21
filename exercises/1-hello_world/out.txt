@@ -1,3 +1,0 @@
-Lets see how well this handles non-latin:
-μῆνιν ἄειδε θεὰ Πηληϊάδεω Ἀχιλῆος
- Homor's Illiad (book 1, verse 1)
