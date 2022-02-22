@@ -31,6 +31,20 @@ class main
                 Write($"{number:e} ");
                 WriteLine();
         }
+        WriteLine($"Size: {list.size}, capacity {list.capacity}");
+
+        WriteLine($"Removing element {list.size/2}");
+        list.remove(list.size/2);
+        WriteLine($"Removing element {list.size/2}");
+        list.remove(list.size/2);
+        for(int i=0;i<list.size;i++)
+        {
+            var numbers = list.data[i];
+            foreach(var number in numbers)
+                Write($"{number:e} ");
+                WriteLine();
+        }
+        WriteLine($"Size: {list.size}, capacity {list.capacity}");
 
         return 0;
     }

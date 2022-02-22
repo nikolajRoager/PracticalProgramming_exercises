@@ -3,7 +3,7 @@ public class genlist<T>
 //A generic list of type T wit hdynamic size
     public T[] data;//I do not like having the data be public, I really want to use a get function instead, but if the exercise asks me for this, I will do so
     private int n;
-    private int capacity;
+    public int capacity;
     public genlist()
     {
         data = new T[1];
@@ -39,6 +39,25 @@ public class genlist<T>
         else
             return data[n-1-i];//I like the python way of accessing the back of the array, lets copy that
     }
+
+
+    public void remove(int I)
+    {
+        //Move back all elements after part I
+        for (int i = I; i<n-1; ++i)
+            data[i]=data[i+1];
+        --n;
+        if (n*2<=capacity)//If we can half capacity again, do it
+        {
+            capacity=capacity/2;
+            T[] newdata = new T[capacity];
+
+            for (int i = 0; i<n; ++i)
+                newdata[i]=data[i];
+            data=newdata;//Move by reference, old data will be picked up by the garbage
+        }
+    }
+
     //Ok, the exercise wanted a signed integer ... I want to use an unsigned integer, but C# is much worse at implicit conversions than c++, so ok, signed it is
 	public int size {get{return n;}} // property, ok this is kind of cool that this looks like a variable without being one
 }
