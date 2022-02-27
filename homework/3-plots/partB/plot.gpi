@@ -1,0 +1,16 @@
+set terminal png
+set output 'gamma.png'
+set xlabel 'x'
+set ylabel 'y'
+set key bmargin
+set title 'Γ'
+set grid
+plot[-4.5:3.5][-6:6] 'gamma_approx.tsv' index 0 using 1:2 with lines title 'Stirling approximation of Γ',\
+'factorials.tsv' using (1+$1):($2) with points pointtype 2 lt rgb "red" title '(n-1)!'
+set output 'lngamma.png'
+set xlabel 'x'
+set ylabel 'y'
+set key bmargin
+set title 'ln(Γ)'
+set grid
+plot 'lngamma_approx.tsv' index 0 using 1:2 with lines title 'Stirling approximation of log(Γ)'

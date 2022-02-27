@@ -1,0 +1,11 @@
+set terminal png
+set output 'gamma.png'
+set xlabel 'Re(z)'
+set ylabel 'Im(z)'
+set zlabel 'Γ(z)'
+set key bmargin
+set title '|Γ(z)| truncated at 8'
+set hidden3d
+set contour surface
+set view map
+splot[-4.0:4.0][-4.0:4.0] 'gamma_approx.tsv' matrix nonuniform with pm3d title ''

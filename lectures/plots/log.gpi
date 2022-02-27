@@ -1,0 +1,7 @@
+set terminal png
+set output 'erf.data.png'
+set xlabel '$x$'
+set ylabel '$\mathrm{erf}(x)$'
+set key left top
+set title 'error function'
+plot 'erf.data.txt' index 0 using ($1):(1-$2) with points pointtype 1 title 'error function'

@@ -1,0 +1,8 @@
+set terminal png
+set output 'erf.png'
+set xlabel 'x  '
+set ylabel ' erf(x) '
+set key left top
+set title 'error function '
+plot[-2:2] 'erf_approx.tsv' index 0 using 1:2 with lines title 'approximation',\
+'erf_wiki.tsv' index 0 using 1:2 with points pointtype 1 title 'reference'
