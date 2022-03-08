@@ -1,0 +1,20 @@
+SDKDIR=$(HOME)/.dotnet/sdk/6.0.102# or whatever your sdk is
+CSCPATH=$(SDKDIR)/Roslyn/bincore/csc.dll
+NETSTANDARD=$(SDKDIR)/ref/netstandard.dll
+CONFIG=$(SDKDIR)/vstest.console.runtimeconfig.json
+DOTNET=DOTNET_CLI_TELEMETRY_OPTOUT=1; dotnet
+CSC=$(DOTNET) $(CSCPATH) -reference:$(NETSTANDARD)
+RUN=$(DOTNET) exec --runtimeconfig $(CONFIG)
+CSC = mcs
+RUN = mono
+
+Out.txt:main.exe
+	$(RUN) $< > $@ 2>log
+
+main.exe: main.cs matlib.dll
+	$(CSC) $< -reference:$(lastword $^)
+matlib.dll: ../matrix/matrix.cs ../matrix/vector.cs qr.cs
+	$(CSC) $^ -target:library -out:$@
+
+clean:
+	$(RM) Out* *.dll *.exe log*
