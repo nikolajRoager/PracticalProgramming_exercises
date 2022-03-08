@@ -1,0 +1,11 @@
+set term png
+set out "Fig.oscillator.png"
+set tics out
+set xlabel "$t$"
+set key bottom
+set title "oscillator"
+set axis x2 atzero
+set x2format ""
+plot \
+ "oscillator.data.txt" using 1:2 with lines title "$\\theta(t)$"\
+,"oscillator.data.txt" using 1:3 with lines title "$\\omega(t)$"

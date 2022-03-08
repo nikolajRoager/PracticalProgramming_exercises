@@ -1,0 +1,28 @@
+set term png
+set out "Fig.erf.png"
+set tics out
+set xlabel "$x$"
+set ylabel "$y$"
+set key left
+set grid
+set title "error function, integral representation"
+plot "erf.txt" using 1:2 with lines title "$\mathrm{erf}(x)= \int_0^x\ldots dx $",\
+"erf.txt" using 1:(1-$4) with lines title "$\mathrm{erf}(x)= 1- \int_x^\infty\ldots dx$"
+set out "Fig.erf.steps.png"
+set tics out
+set xlabel "$x$"
+set ylabel "$n$"
+set key left
+set grid
+set title "error function, steps used"
+plot "erf.txt" using 1:3 with lines title "$\mathrm{erf}(x)=  \int_0^x\ldots dx $",\
+"erf.txt" using 1:5 with lines title "$\mathrm{erf}(x)= 1- \int_x^\infty\ldots dx$"
+set out "Fig.bessel.png"
+set tics out
+set xlabel "$x$"
+set ylabel "$J_1(x)$"
+set key left
+set grid
+set title "Bessel function"
+plot "bessel.txt" using 1:2 with lines title "C\#",\
+"bessel_py.txt" using 1:2 with lines title "Python"
