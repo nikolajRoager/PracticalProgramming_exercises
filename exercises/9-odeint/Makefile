@@ -4,19 +4,17 @@
 CSC = mcs
 RUN = mono
 
-all: integrate.txt erf.png
-;cat integrate.txt
-erf.png: erf.gpi erf.txt
+all: pendulum.png log
+;cat log
+pendulum.png: plot.gpi data.tsv
 ;pyxplot $<
 
 
-integrate.txt erf.txt: integrate.exe bessel.py
-;$(RUN) $< erf.txt bessel.txt > integrate.txt
-;python3 bessel.py > bessel_py.txt
+data.tsv: odeint.exe
+;$(RUN) $< 1> $@ 2>log
 
-integrate.exe :main.cs matlib.dll
+odeint.exe :main.cs matlib.dll
 ;$(CSC) -t:exe -out:$@ $(addprefix -r:,$(filter %.dll,$^)) $(filter %.cs,$^)
-
 
 LIBDIR = ../../matlib
 matlib.dll: \
@@ -24,7 +22,6 @@ $(LIBDIR)/integrate/integrate.cs \
 $(LIBDIR)/odeint/ode.cs \
 $(LIBDIR)/matrix/vector.cs
 ;$(CSC) -target:library -out:./$@ $^
-
 
 clean:
 ;rm -f *.dll *.exe *.png *.txt log*
