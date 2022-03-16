@@ -1,0 +1,75 @@
+set term png
+set out "All.png"
+set title "All interpolations"
+set xlabel "$x$"
+set xlabel "$y$"
+set key below
+plot  "data.tsv" using 1:2 with points title "data",\
+"linear.tsv" using 1:2 with lines title "Linear",\
+"qspline.tsv" using 1:2 with lines title "Quadratic",\
+"cspline.tsv" using 1:2 with lines title "Cubic",\
+"plotutils.tsv" using 1:2 with lines linetype 2 title "plotutils spline"
+
+set out "Linear.png"
+set title "Linear interpolations"
+plot  "data.tsv" using 1:2 with points title "data",\
+"linear.tsv" using 1:2 with lines title "interpolation"
+
+set out "Qspline.png"
+set title "Quadratic spline interpolations"
+plot  "data.tsv" using 1:2 with points title "data",\
+"qspline.tsv" using 1:2 with lines title "interpolation"
+
+set out "Cspline.png"
+set title "Cubic spline interpolations"
+plot  "data.tsv" using 1:2 with points title "data",\
+"cspline.tsv" using 1:2 with lines title "interpolation",\
+"plotutils.tsv" using 1:2 with lines title "plotutils spline"
+
+
+set out "Linear_integral.png"
+set title "Linear interpolations, integral"
+plot  "data.tsv" using 1:2 with points title "data",\
+"linear.tsv" using 1:2 with lines title "interpolation",\
+"linear.tsv" using 1:3 with lines title "analytic",\
+"linear.tsv" using 1:4 with lines linetype 2 title "numeric "
+
+set out "Linear_derivative.png"
+set title "Linear interpolations, derivative"
+plot  "data.tsv" using 1:2 with points title "data",\
+"linear.tsv" using 1:2 with lines title "interpolation",\
+"linear.tsv" using 1:5 with lines title "analytic",\
+"linear.tsv" using 1:6 with lines linetype 2 title "numeric "
+
+set out "Qspline_integral.png"
+set title "Quadratic spline interpolations, integral"
+plot  "data.tsv" using 1:2 with points title "data",\
+"qspline.tsv" using 1:2 with lines title "interpolation",\
+"qspline.tsv" using 1:3 with lines title "analytic",\
+"qspline.tsv" using 1:4 with lines linetype 2 title "numeric "
+
+
+set out "Qspline_derivative.png"
+set title "Quadratic spline interpolations, derivative"
+plot  "data.tsv" using 1:2 with points title "data",\
+"qspline.tsv" using 1:2 with lines title "interpolation",\
+"qspline.tsv" using 1:5 with lines title "analytic",\
+"qspline.tsv" using 1:6 with lines linetype 2 title "numeric "
+
+
+
+
+set out "Cspline_integral.png"
+set title "Quadratic spline interpolations, integral"
+plot  "data.tsv" using 1:2 with points title "data",\
+"cspline.tsv" using 1:2 with lines title "interpolation",\
+"cspline.tsv" using 1:3 with lines title "analytic",\
+"cspline.tsv" using 1:4 with lines linetype 2 title "numeric "
+
+
+set out "Cspline_derivative.png"
+set title "Cubic spline interpolations, derivative"
+plot  "data.tsv" using 1:2 with points title "data",\
+"cspline.tsv" using 1:2 with lines title "interpolation",\
+"cspline.tsv" using 1:5 with lines title "analytic",\
+"cspline.tsv" using 1:6 with lines linetype 2 title "numeric "
