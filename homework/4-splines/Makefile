@@ -10,11 +10,11 @@ all: All.png plotutils.png logA logB
 All.png: plot.gpi linear.tsv qspline.tsv plotutils.tsv cspline.tsv
 ;pyxplot $<
 
-plotutils.png:
-;cat data.tsv | spline | graph -T png > plotutils.png
+plotutils.png: Makefile
+;cat data.tsv | spline --boundary-condition 0 | graph -T png > plotutils.png
 
-plotutils.tsv:
-;cat data.tsv | spline > $@
+plotutils.tsv: Makefile
+;cat data.tsv | spline --boundary-condition 0 > $@
 
 linear.tsv logA: Alinear.exe
 ;$(RUN) $< data.tsv 1> $@ 2>logA
