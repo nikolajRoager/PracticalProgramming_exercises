@@ -41,4 +41,4 @@ binary_search.dll : binary_search.cs
 
 
 clean:
-;rm -f *.dll *.exe *.png linear.tsv qspline.tsv plotutils.tsv log*
+;rm -f *.dll *.exe *.png linear.tsv qspline.tsv plotutils.tsv log* qspline.tsv cspline.tsv
