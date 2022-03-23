@@ -4,19 +4,22 @@
 CSC = mcs
 RUN = mono
 
-all: logA logB time.tsv
+all : logA logB time.png
 ;cat logA
 ;cat logB
-;cat time.tsv
 
-logA: A_GramSchmidt.exe Makefile
+logA: A_GramSchmidt.exe
 ;$(RUN) $< 9 3 > $@
 
-logB: B_Inverse.exe Makefile
+logB: B_Inverse.exe
 ;$(RUN) $< 6 > $@
 
+time.png: time.tsv
+;pyxplot plot.gpi
+
 #I do this a little differently, I time in the application, so as to not count the time generating the matrices, and also to get better control of the output format
-time.tsv: C_time.exe Makefile
+time.tsv: C_time.exe
+;echo 'Testing diagonalization of matrices up to size 256 by 256, this may take a little while'
 ;$(RUN) $< 256 > $@
 
 
@@ -32,6 +35,8 @@ C_time.exe:C_time.cs matrix.dll
 
 matrix.dll : matrix.cs
 ;$(CSC) $< -target:library  -out:$@
+
+.PHONY: clean
 
 clean:
 ;rm -f *.dll *.exe log*

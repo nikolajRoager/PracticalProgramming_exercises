@@ -1,0 +1,6 @@
+set term png
+set out "time.png"
+set title "QR decomposition time cost"
+set xlabel "matrix size (n by n matrix)"
+set ylabel "$t/ms$ (QR decomposition only)"
+plot  "time.tsv" using 1:2 with points notitle
