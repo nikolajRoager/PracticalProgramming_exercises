@@ -8,6 +8,14 @@ In part A I look at a 6 by 3 matrix and find the QR decomposition, I repeat this
 
 In part B I invert
 
-In part C, I measure the time of the QR decomposition at different N, note that I measure the time from inside the program, rather than outside it. This is so that I only measure the decomposition and skip the time taken to load and generate the matrices, I measurethe time to decompose a 2x2 to a 256x256 matrix.
+I do part C twice, first method, use system clock internaly C# methods for timing ONLY the decomposition, advantages: compact, just one program with a for-loop inside, the setup of the matrix is NOT counted, and the internal clock has higher precision (milli seconds range). Disadvantage, if other programs run at the same time, the result will be effected.
 
-I fit this to a a x^3+b function, this is done using my result from the next homework, which is included as fit.cs, I believe from that homework that this function is working. In this case I use 1 milli second as the uncertainty, as the timing function I used returned integer milli seconds.
+Second method, (C_time_single.cs) I just set up and run ONCE, timing with `time`) I repeat this for as many matrix sizes as before. the time utility has WORSE precision (output is limited to 10 milli seconds)
+
+WARNING, I explicitly call `/usr/bin/time`, rather than `time`!!! this is because zsh overwrites time with its own (far inferior) version
+
+I test this (both ways) for matrices from 2x2 to a 300x300 .
+
+In either version of C, I fit this to a a a x^3+b function, this is done using my result from the next homework, which is included as fit.cs, I believe from that homework that this function is working.
+
+The fits both work, showing that the function runs in the expected time (I did not really do a chi^2 test or anything, it just looks fine I guess) The second method with `time` is worse, because the time utility has worse resolution has a noticably larger offset and slightly different coefficient a, likely due to time wasted reading from the input and setting up the matrix.

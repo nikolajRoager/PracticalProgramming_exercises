@@ -1,0 +1,12 @@
+set term png
+set out "partA.png"
+set title "activity over time of isotope"
+set xlabel "$t$ (days)"
+set ylabel "$a$"
+plot  "rutherford.tsv" using 1:2:3 with errorbars title "data",\
+"fitAC.tsv" using 1:2 with lines title "Best fit"
+set out "partC.png"
+plot  "rutherford.tsv" using 1:2:3 with errorbars title "data",\
+"fitAC.tsv" using 1:2 with lines title "Best fit",\
+"fitAC.tsv" using 1:3 with lines title "$F_(c+\sigma_c)(t)$",\
+"fitAC.tsv" using 1:4 with lines title "$F_(c-\sigma_c)(t)$"

@@ -1,6 +1,6 @@
 using System;
 using static System.Math;
-using static System.Console;
+//using static System.Console;
 
 public class matrix
 {
@@ -334,13 +334,13 @@ public class matrix
                 OUT[i,j]=(OUT[i,j]-sum)/RT[i,i];
             }
         }
-
+/*
         matrix TEST = RT*OUT;
         Error.WriteLine("After forward substitution now OUT = R A^p");
         Error.WriteLine(TEST.getString("RT*OUT   ="));
         Error.WriteLine("\n");
         Error.WriteLine(AT.getString("A^T (same) ="));
-
+*/
 
         //Now we have: R A^p = (R A^p), use backwards substitution to get A^P
         //Backward substitution in place
@@ -354,6 +354,7 @@ public class matrix
                 OUT[i,j]=(OUT[i,j]-sum)/R[i,i];
             }
         }
+    /*
         TEST = RT*R*OUT;
         Error.WriteLine("After backwards substitution now OUT = A^p");
         Error.WriteLine(TEST.getString("R^T*R*OUT ="));
@@ -361,7 +362,7 @@ public class matrix
 
         Error.WriteLine((AT).getString("A^T (same)="));
         Error.WriteLine("\n");
-
+*/
 
         return OUT;
 	}

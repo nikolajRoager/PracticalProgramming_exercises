@@ -17,9 +17,9 @@ public static class main
         int h=0;//As tall a matrix as we need to load
 
         //Pre declare so this exists outside the loading environment
-        double[]  t_list;
-        double[]  a_list;
-        double[] da_list;
+        double[]  n_list;
+        double[]  ts_list;
+        double[]  dts_list;
 
         try
         {
@@ -28,9 +28,9 @@ public static class main
             var options = StringSplitOptions.RemoveEmptyEntries;
 
             string  [] lines = System.IO.File.ReadAllLines(argv[0]);
-            t_list=new double[lines.Length];
-            a_list=new double[lines.Length];
-            da_list=new double[lines.Length];
+            n_list=new double[lines.Length];
+            ts_list=new double[lines.Length];
+            dts_list=new double[lines.Length];
 
 
             foreach(string line in lines )
@@ -64,9 +64,9 @@ public static class main
                     return 1;
 
                 }
-                t_list[h]=x;
-                a_list[h]=Log(y);
-                da_list[h]=dy/y;
+                n_list[h]=x;
+                ts_list[h]=y;
+                dts_list[h]=dy/y;
                 ++h;
             }
         }
@@ -81,9 +81,9 @@ public static class main
         matrix Sigma;
         try
         {
-            (Params,Sigma) = LSfit(t_list,a_list,da_list,
-            //Linear fit, ln(a) is one parameter, λ another
-            new Func<double,double>[] { z => 1.0, z => -z }
+            (Params,Sigma) = LSfit(n_list,ts_list,dts_list,
+            //fit to a a+bx^3
+            new Func<double,double>[] { z => 1.0, z => z*z*z }
             );
         }
         catch(System.Exception E)
@@ -92,17 +92,19 @@ public static class main
             return 2;
         }
 
-        Error.WriteLine($"Fit done with parameters: ln(a)= {Params[0]}, λ= {Params[1]} ");
 
-        Error.WriteLine(Sigma.getString("Covariance matrix = "));
+        Error.WriteLine(Sigma.getString("(rounded to 3 digits) Covariance matrix = "));
 
-        //Plot of fit without applying errors
-        for (double this_t = t_list[0]; this_t<t_list[t_list.Length-1]; this_t+=0.1)
+        double Sig1 = Sqrt(Sigma[1,1]);
+        double Sig0 = Sqrt(Sigma[0,0]);
+
+        Error.WriteLine($"Estimated parameters a= {Params[0]} ± {Sig0}; b = {Params[1]} ± {Sig1} ");
+        //Plot of fit with and without applying errors in either direction (Yes, this is part C and A together, sorry
+        for (double  n = 0 ; n<n_list[n_list.Length-1]; n+=0.1)//bit weird having n be a floating point number, but oh well
         {
-            WriteLine($"{this_t}\t{ Exp(Params[0]-Params[1]*this_t) }");
+            WriteLine($"{n}\t{ Params[0]+Params[1]*n*n*n }\t{ Params[0]+Sig0+(Params[1]+Sig1)*n*n*n }\t{ Params[0]-Sig0+(Params[1]-Sig1)*n*n*n}");
         }
 
-        Error.WriteLine($"Estimated activity λ = {Params[1]} ± {Sqrt(Sigma[1,1])} halflife {Log(2)/Params[1]} ± {(Log(2)/(Params[1]*Params[1])) *Sqrt(Sigma[1,1])} days, compared to modern 3.6319 d");
         return 0;
     }
 

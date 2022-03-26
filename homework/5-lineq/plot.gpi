@@ -1,6 +1,17 @@
 set term png
-set out "time.png"
-set title "QR decomposition time cost"
+set out "C_time.png"
+set title "QR decomposition time cost (C\# internal timing function)"
 set xlabel "matrix size (n by n matrix)"
 set ylabel "$t/ms$ (QR decomposition only)"
-plot  "time.tsv" using 1:2 with points notitle
+plot  "time.tsv" using 1:2 with points title "time cost",\
+"time_fit.tsv" using 1:2 with line title "best $a+bn^3$ fit",\
+"time_fit.tsv" using 1:2 with line title "upper $a+b n^3$ bound",\
+"time_fit.tsv" using 1:2 with line title "lower $a+b n^3$ bound"
+set out "C_time_GNUmethod.png"
+set title "QR decomposition time cost (according to /usr/bin/time)"
+set xlabel "matrix size (n by n matrix)"
+set ylabel "$t/s$ (QR decomposition only)"
+plot  "time_single.tsv" using 1:2 with points title "time cost",\
+"time_s_fit.tsv" using 1:2 with line title "best $a+bn^3$ fit",\
+"time_s_fit.tsv" using 1:2 with line title "upper $a+b n^3$ bound",\
+"time_s_fit.tsv" using 1:2 with line title "lower $a+b n^3$ bound"

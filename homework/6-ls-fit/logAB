@@ -1,0 +1,8 @@
+----PART A----
+Fit done with parameters: ln(a)= 4.95112516950656, λ= 0.172070796448845 
+                                          |    0.001    0.000 |
+(rounded to 3 digits) Covariance matrix = |    0.000    0.000 |
+Estimated parameters ln(a)= 4.95112516950656  λ = 0.172070796448845  halflife 4.02826740426003  days, compared to modern estimate (wikipedia) 3.6319 d
+----PART B----
+Estimated parameters ln(a)= 4.95112516950656 ± 0.0317252840715503 λ = 0.172070796448845 ± 0.004029186777016 halflife 4.02826740426003 ± 0.0943253712686466 days, compared to modern estimate (wikipedia) 3.6319 days (error presumably on scale of the final digit)
+NOT Inside error of modern estimate

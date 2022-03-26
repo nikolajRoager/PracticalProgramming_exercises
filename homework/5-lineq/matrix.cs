@@ -1,5 +1,6 @@
 using System;
 using static System.Math;
+//using static System.Console;
 
 public class matrix
 {
@@ -57,7 +58,7 @@ public class matrix
             Out+= "  |";
             for (int j = 0; j < width; ++j)
             {
-                Out+=((Abs(this[i,j])< 10) ? " " : "")+((this[i,j]>=0) ? " " : "")+string.Format(" {0:N3}",this[i,j]);
+                Out+=((Abs(this[i,j])< 100) ? " " : "")+((Abs(this[i,j])< 10) ? " " : "")+((this[i,j]>=0) ? " " : "")+string.Format(" {0:N3}",this[i,j]);
             }
             if (i<height-1)
                 Out+=" |\n";
@@ -84,7 +85,7 @@ public class matrix
             for (int j = 0; j < width; ++j)
             {
 
-                Out+=((Abs(this[i,j])< 10) ? " " : "")+((this[i,j]>=0) ? " " : "")+string.Format(" {0:N3}",this[i,j]);
+                Out+=((Abs(this[i,j])< 100) ? " " : "")+((Abs(this[i,j])< 10) ? " " : "")+((this[i,j]>=0) ? " " : "")+string.Format(" {0:N3}",this[i,j]);
             }
             if (i<height-1)
                 Out+=" |\n";
@@ -112,7 +113,7 @@ public class matrix
             for (int j = 0; j < width; ++j)
             {
 
-                Out[i]+=((Abs(this[i,j])< 10) ? " " : "")+((this[i,j]>=0) ? " " : "")+string.Format(" {0:N3}",this[i,j]);
+                Out[i]+=((Abs(this[i,j])< 100) ? " " : "")+((Abs(this[i,j])< 10) ? " " : "")+((this[i,j]>=0) ? " " : "")+string.Format(" {0:N3}",this[i,j]);
             }
             Out[i]+=" |";
         }
@@ -180,6 +181,12 @@ public class matrix
                 this[i,j]=generator.NextDouble();
     }
 
+    public double[] get_data ()
+    {
+        return data;
+    }
+
+
     public double colNorm (int j)
     {
         double Norm2 =0;
@@ -240,24 +247,39 @@ public class matrix
     {
         if (b.width!=1)
             throw new ArgumentException("b should be a single column");
-        if (b.height!=Q.width)
-            throw new ArgumentException("b should have same height as matrix width");
+        if (b.height!=Q.height)
+            throw new ArgumentException("b should have same height as Q matrix");
         if (Q.width!=R.width)
             throw new ArgumentException("Q and R should have same width");
-        //Already assumes that Q is orthagonal
+
+/*
+        Error.WriteLine((Q).getString("Having Q ="));
+        Error.WriteLine("\n");
+        Error.WriteLine(((Q.transpose())*Q).getString("Having du that Q^T*Q ="));
+        Error.WriteLine("\n");
+        Error.WriteLine((Q*(Q.transpose())).getString("Having du that Q*Q^T ="));
+        Error.WriteLine("\n");
+*/
+
+
+
+        //Already assumes that Q is orthagonal, if not we are just solving   R*x = Q^T b
         var c = Q.transpose()*b;
+        var x = c.copy();
         //Now R x = c can be solved with back-substitution
         //As in the chapter, I use in-place back substitution
 
+        //Error.WriteLine("\n");
+        //Error.WriteLine(c.getString("DO TRY TO SOLVE R*x = Q^T b ="));
         for (int i = c.height-1; i>=0; --i)
         {
             double sum = 0;
             for (int k = i+1; k<c.height; ++k)
-                sum+=R[i,k]*c[k,0];
-            c[i,0]=(c[i,0]-sum)/R[i,i];
+                sum+=R[i,k]*x[k,0];
+            x[i,0]=(x[i,0]-sum)/R[i,i];
         }
 
-        return c;
+        return x;
 	}
 
 
@@ -269,7 +291,6 @@ public class matrix
         //We really want to solve $height equations QR x = [0,0,...1 ... 0]
 
         //We can write this as a matrix equation, which can be solved with back substitution
-        matrix unit_vector = vector(Q.width);
         matrix unity = new matrix(Q.height,Q.width);
         //Already assumes that Q is orthagonal
         //Now R x = c can be solved with back-substitution on the entire matrix
@@ -285,6 +306,65 @@ public class matrix
             }
         }
         return Out;
+	}
+
+    //I did not note down the definition pseudo-inverse's, but it sounds somewhat similar to penrose inverse
+    public static matrix penrose_inverse(matrix Q, matrix R)
+    {
+        //We have do R^T R A^p = (A)^T
+
+        //R^T R A^p = (Q R)^T
+        matrix RT = R.transpose();
+        matrix AT = (Q*R).transpose();
+
+
+
+        //We can write this as a matrix equation, which can be solved with forward+back substitution
+
+        matrix OUT = AT.copy();
+
+        //Forwards substitution,column by column, in place
+        for (int j = 0; j < OUT.width; ++j)
+        {
+            for (int i = 0; i< OUT.height; ++i)
+            {
+                double sum = 0;
+                for (int k = 0; k<i; ++k)
+                    sum+=RT[i,k]*OUT[k,j];
+                OUT[i,j]=(OUT[i,j]-sum)/RT[i,i];
+            }
+        }
+/*
+        matrix TEST = RT*OUT;
+        Error.WriteLine("After forward substitution now OUT = R A^p");
+        Error.WriteLine(TEST.getString("RT*OUT   ="));
+        Error.WriteLine("\n");
+        Error.WriteLine(AT.getString("A^T (same) ="));
+*/
+
+        //Now we have: R A^p = (R A^p), use backwards substitution to get A^P
+        //Backward substitution in place
+        for (int j = 0; j < OUT.width; ++j)
+        {
+            for (int i = OUT.height-1; i>=0; --i)
+            {
+                double sum = 0;
+                for (int k = i+1; k<OUT.height; ++k)
+                    sum+=R[i,k]*OUT[k,j];
+                OUT[i,j]=(OUT[i,j]-sum)/R[i,i];
+            }
+        }
+    /*
+        TEST = RT*R*OUT;
+        Error.WriteLine("After backwards substitution now OUT = A^p");
+        Error.WriteLine(TEST.getString("R^T*R*OUT ="));
+        Error.WriteLine("\n");
+
+        Error.WriteLine((AT).getString("A^T (same)="));
+        Error.WriteLine("\n");
+*/
+
+        return OUT;
 	}
 
     //Not as detailed operations as in the matlib class, but enough to get by:

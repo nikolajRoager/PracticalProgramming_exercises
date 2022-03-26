@@ -4,16 +4,16 @@
 CSC = mcs
 RUN = mono
 
-all : logA partA.png
-;cat logA
+all : logAB partA.png
+;cat logAB
 
-partA.png: fitA.tsv plot.gpi
+partA.png : fitAC.tsv plot.gpi
 ;pyxplot plot.gpi
 
-logA fitA.tsv: A_lnfit.exe
-;$(RUN) $< rutherford.tsv 2> logA 1> fitA.tsv
+logAB fitAC.tsv: ABC_lnfit.exe
+;$(RUN) $< rutherford.tsv 2> logAB 1> fitAC.tsv
 
-A_lnfit.exe:A_lnfit.cs fit.dll matrix.dll
+ABC_lnfit.exe:ABC_lnfit.cs fit.dll matrix.dll
 ;$(CSC) -target:exe -out:$@  -reference:fit.dll  -reference:matrix.dll $<
 
 matrix.dll : matrix.cs
@@ -26,4 +26,4 @@ fit.dll : fit.cs matrix.dll
 .PHONY: clean
 
 clean:
-;rm -f *.dll *.exe log*
+;rm -f *.dll *.exe log* *.png fit*.tsv

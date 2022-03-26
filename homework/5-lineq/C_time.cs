@@ -21,11 +21,12 @@ public static class main
             return 1;
         }
 
-        Error.WriteLine($"Testing random matrices from 2x2 to {wh}x{wh} in steps of 1");
+        Error.WriteLine($"Testing random matrices from 2x2 to {wh}x{wh} in steps of 1 (internal C# timer method)");
 
         for (int n = 2; n<wh;++n)
         {
 
+            Error.WriteLine($"Internal timer matrix {n}x{n} (out of  {wh}x{wh})");
             DateTime start = DateTime.UtcNow;
 
             matrix A=new matrix(n,n);
