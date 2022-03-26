@@ -2,6 +2,6 @@ set term png
 set out "partA.png"
 set title "activity over time of isotope"
 set xlabel "$t$ (days)"
-set ylabel "$a$ (QR decomposition only)"
+set ylabel "$a$"
 plot  "rutherford.tsv" using 1:2:3 with errorbars title "data",\
 "fitA.tsv" using 1:2 with lines title "fit"

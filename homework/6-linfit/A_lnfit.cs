@@ -94,13 +94,15 @@ public static class main
 
         Error.WriteLine($"Fit done with parameters: ln(a)= {Params[0]}, λ= {Params[1]} ");
 
+        Error.WriteLine(Sigma.getString("Covariance matrix = "));
+
         //Plot of fit without applying errors
         for (double this_t = t_list[0]; this_t<t_list[t_list.Length-1]; this_t+=0.1)
         {
             WriteLine($"{this_t}\t{ Exp(Params[0]-Params[1]*this_t) }");
         }
 
-        Error.WriteLine($"Estimated halflie (part A has no error bars) {Log(2)/Params[1]} days, compared to modern 3.6319 d");
+        Error.WriteLine($"Estimated activity λ = {Params[1]} ± {Sqrt(Sigma[1,1])} halflife {Log(2)/Params[1]} ± {(Log(2)/(Params[1]*Params[1])) *Sqrt(Sigma[1,1])} days, compared to modern 3.6319 d");
         return 0;
     }
 

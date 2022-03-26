@@ -263,7 +263,7 @@ public class matrix
 
 
 
-        //Already assumes that Q is orthagonal
+        //Already assumes that Q is orthagonal, if not we are just solving   R*x = Q^T b
         var c = Q.transpose()*b;
         var x = c.copy();
         //Now R x = c can be solved with back-substitution
@@ -321,7 +321,7 @@ public class matrix
 
         //We can write this as a matrix equation, which can be solved with forward+back substitution
 
-        matrix OUT = AT;
+        matrix OUT = AT.copy();
 
         //Forwards substitution,column by column, in place
         for (int j = 0; j < OUT.width; ++j)
@@ -334,15 +334,13 @@ public class matrix
                 OUT[i,j]=(OUT[i,j]-sum)/RT[i,i];
             }
         }
-/*
+
         matrix TEST = RT*OUT;
-        Error.WriteLine($"{TEST.height} {TEST.width}");
-        Error.WriteLine(TEST.getString("RT*OUT ="));
+        Error.WriteLine("After forward substitution now OUT = R A^p");
+        Error.WriteLine(TEST.getString("RT*OUT   ="));
         Error.WriteLine("\n");
-        Error.WriteLine(TEST.getString("A^T       ="));
-        Error.WriteLine("\n");
-        Error.WriteLine(OUT.getString("R A^pinv="));
-*/
+        Error.WriteLine(AT.getString("A^T (same) ="));
+
 
         //Now we have: R A^p = (R A^p), use backwards substitution to get A^P
         //Backward substitution in place
@@ -356,10 +354,14 @@ public class matrix
                 OUT[i,j]=(OUT[i,j]-sum)/R[i,i];
             }
         }
-/*        TEST = R*OUT;
-        Error.WriteLine(TEST.getString("R*OUT ="));
+        TEST = RT*R*OUT;
+        Error.WriteLine("After backwards substitution now OUT = A^p");
+        Error.WriteLine(TEST.getString("R^T*R*OUT ="));
         Error.WriteLine("\n");
-*/
+
+        Error.WriteLine((AT).getString("A^T (same)="));
+        Error.WriteLine("\n");
+
 
         return OUT;
 	}
