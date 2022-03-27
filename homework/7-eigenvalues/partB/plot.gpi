@@ -1,0 +1,45 @@
+set term png
+set out "Energies_N.png"
+set title "lowest energy states with for  $R_{max} = 50$ at different resolutions"
+set xlabel "$n$"
+set ylabel "$E/eV$ "
+set key out
+plot  "DATA/energies.tsv" using 1:3 with line title "$E_0$",\
+"DATA/energies.tsv" using 1:4 with line title "$E_1$",\
+"DATA/energies.tsv" using 1:5 with line title "$E_2$",\
+"DATA/energies.tsv" using 1:6 with line title "$E_3$",\
+"DATA/energies.tsv" using 1:7 with line title "$E_4$",\
+-13.7 with line linetype 2 title "Analytical",\
+-13.7/4 with line linetype 2 notitle,\
+-13.7/9 with line linetype 2 notitle,\
+-13.7/16 with line linetype 2 notitle,\
+-13.7/25 with line linetype 2 notitle
+
+set out "Energies_R.png"
+set title "lowest energy states with for $N/R_{max} = 4$ at different $R_{max}$ "
+set xlabel "$R_{max}/a$"
+set ylabel "$E/eV$ "
+set key out
+plot  "DATA/energiesR.tsv" using 2:3 with line title "$E_0$",\
+"DATA/energiesR.tsv" using 2:4 with line title "$E_1$",\
+"DATA/energiesR.tsv" using 2:5 with line title "$E_2$",\
+"DATA/energiesR.tsv" using 2:6 with line title "$E_3$",\
+"DATA/energiesR.tsv" using 2:7 with line title "$E_4$",\
+-13.7 with line linetype 2 title "Analytical",\
+-13.7/4 with line linetype 2 notitle,\
+-13.7/9 with line linetype 2 notitle,\
+-13.7/16 with line linetype 2 notitle,\
+-13.7/25 with line linetype 2 notitle
+
+
+
+set out "wavefunctions.png"
+set title "Radial wavefunctions (eigenvectors) calculated with $N=400$ and  $R_{max}=100$ "
+set xlabel "$R_{max}/a$"
+set ylabel "$E/eV$ "
+set key out
+plot  "DATA/wavefunction_100_400.tsv" using 1:2 with line title "$\psi_0$",\
+      "DATA/wavefunction_100_400.tsv" using 1:3 with line title "$\psi_1$",\
+      "DATA/wavefunction_100_400.tsv" using 1:4 with line title "$\psi_2$",\
+      "DATA/wavefunction_100_400.tsv" using 1:5 with line title "$\psi_3$",\
+      "DATA/wavefunction_100_400.tsv" using 1:6 with line title "$\psi_4$"

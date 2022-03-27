@@ -49,6 +49,21 @@ public class matrix
                 Out[j,i]=this[i,j];
         return Out;
     }
+
+
+    public matrix diag()
+    {
+        int n = Min(height,width);
+        matrix Out = new matrix(n,1);
+
+        for (int i = 0; i < n; ++i)
+        {
+            Out[i,0]=this[i,i];
+        }
+        return Out;
+    }
+
+
     //Pretty display function
     public override string ToString()
     {

@@ -26,4 +26,4 @@ fit.dll : fit.cs matrix.dll
 .PHONY: clean
 
 clean:
-;rm -f *.dll *.exe log* *.png fit*.tsv
+;rm -f *.dll *.exe log* *.png fit*.tsv time*.tsv

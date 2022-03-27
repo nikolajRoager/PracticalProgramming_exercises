@@ -85,7 +85,7 @@ public class matrix
             for (int j = 0; j < width; ++j)
             {
 
-                Out+=((Abs(this[i,j])< 100) ? " " : "")+((Abs(this[i,j])< 10) ? " " : "")+((this[i,j]>=0) ? " " : "")+string.Format(" {0:N3}",this[i,j]);
+                Out+=((Abs(this[i,j])< 100) ? " " : "")+((Abs(this[i,j])< 10) ? " " : "")+((this[i,j]>=-0.001) ? " " : "")+string.Format(" {0:N3}",this[i,j]);
             }
             if (i<height-1)
                 Out+=" |\n";
@@ -113,7 +113,7 @@ public class matrix
             for (int j = 0; j < width; ++j)
             {
 
-                Out[i]+=((Abs(this[i,j])< 100) ? " " : "")+((Abs(this[i,j])< 10) ? " " : "")+((this[i,j]>=0) ? " " : "")+string.Format(" {0:N3}",this[i,j]);
+                Out[i]+=((Abs(this[i,j])< 100) ? " " : "")+((Abs(this[i,j])< 10) ? " " : "")+((this[i,j]>=-0.001) ? " " : "")+string.Format(" {0:N3}",this[i,j]);
             }
             Out[i]+=" |";
         }
@@ -171,6 +171,20 @@ public class matrix
     }
 
 
+    public void randomize_symmetric()
+    {
+        var generator = new Random();
+
+        if (width != height)
+            throw new ArgumentException("Symmetric matrices must be square");
+
+        for (int j = 0; j < width; ++j)
+            for (int i = j+1; i < width; ++i)
+            {
+                this[i,j]=generator.NextDouble();
+                this[j,i]=this[i,j];
+            }
+    }
 
     public void randomize()
     {
