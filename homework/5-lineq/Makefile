@@ -24,7 +24,7 @@ time_single.tsv: C_single.exe  Makefile
 	number=3 ; while [[ $$number -le 300 ]] ; do \
 		echo Running single  decomposition $$number by $$number, using /usr/bin/time matrix ; \
 	    /usr/bin/time -o time_single.tsv  --append -f "$$number %U 0.01" mono C_single.exe $$number;\
-		((number = number + 1)) ; \
+		((number = number + 10)) ; \
 	done
 
 
