@@ -1,0 +1,9 @@
+set term png
+set out "C_time.png"
+set title "Jacobi routine"
+set xlabel "matrix size (n by n matrix)"
+set ylabel "$t/s$"
+plot  "time_nonoptimized.tsv" using 1:2 with points title "time cost",\
+"time_nonoptimized_fit.tsv" using 1:2 with line title "$a+bn^3$ fit",\
+"time_optimized.tsv" using 1:2 with points title "(optimized) time cost",\
+"time_optimized_fit.tsv" using 1:2 with line title "(optimized) $a+bn^3$ fit"

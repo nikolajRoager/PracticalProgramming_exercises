@@ -23,7 +23,7 @@ public static class main
 
         Error.WriteLine($"Testing random matrices from 2x2 to {wh}x{wh} in steps of 1 (internal C# timer method)");
 
-        for (int n = 2; n<wh;++n)
+        for (int n = 10; n<wh;n+=10)
         {
 
             Error.WriteLine($"Internal timer matrix {n}x{n} (out of  {wh}x{wh})");

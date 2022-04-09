@@ -30,6 +30,7 @@ public static class main
 
         A.randomize_symmetric();
 
+
         WriteLine(A.getString("A ="));
 
         (matrix D, matrix V) =jacobi.getDV(A);

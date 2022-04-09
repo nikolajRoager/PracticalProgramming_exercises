@@ -10,4 +10,4 @@ NOTE my matrix display functions print ROUNDS to the third digit. (As far as I k
 
 NOTE matrix.cs is MY OWN implementation of a matrix class
 
-My pseudoinverse function is in matrix.cs, my fit function is in fit.cs.
+My pseudoinverse function is in matrix.cs, my fit function is in fit.cs. I just thought it made sense to put it there.

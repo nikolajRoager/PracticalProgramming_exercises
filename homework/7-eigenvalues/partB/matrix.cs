@@ -49,21 +49,6 @@ public class matrix
                 Out[j,i]=this[i,j];
         return Out;
     }
-
-
-    public matrix diag()
-    {
-        int n = Min(height,width);
-        matrix Out = new matrix(n,1);
-
-        for (int i = 0; i < n; ++i)
-        {
-            Out[i,0]=this[i,i];
-        }
-        return Out;
-    }
-
-
     //Pretty display function
     public override string ToString()
     {
@@ -73,7 +58,7 @@ public class matrix
             Out+= "  |";
             for (int j = 0; j < width; ++j)
             {
-                Out+=((Abs(this[i,j])< 100) ? " " : "")+((Abs(this[i,j])< 10) ? " " : "")+((this[i,j]>=0) ? " " : "")+string.Format(" {0:N3}",this[i,j]);
+                Out+=((Abs(this[i,j])< 100) ? " " : "")+((Abs(this[i,j])< 10) ? " " : "")+((this[i,j]>=0) ? " " : "")+string.Format(" {0:N5}",this[i,j]);
             }
             if (i<height-1)
                 Out+=" |\n";
@@ -100,7 +85,7 @@ public class matrix
             for (int j = 0; j < width; ++j)
             {
 
-                Out+=((Abs(this[i,j])< 100) ? " " : "")+((Abs(this[i,j])< 10) ? " " : "")+((this[i,j]>=-0.001) ? " " : "")+string.Format(" {0:N3}",this[i,j]);
+                Out+=((Abs(this[i,j])< 100) ? " " : "")+((Abs(this[i,j])< 10) ? " " : "")+((this[i,j]>=-0.001) ? " " : "")+string.Format(" {0:N5}",this[i,j]);
             }
             if (i<height-1)
                 Out+=" |\n";
@@ -128,7 +113,7 @@ public class matrix
             for (int j = 0; j < width; ++j)
             {
 
-                Out[i]+=((Abs(this[i,j])< 100) ? " " : "")+((Abs(this[i,j])< 10) ? " " : "")+((this[i,j]>=-0.001) ? " " : "")+string.Format(" {0:N3}",this[i,j]);
+                Out[i]+=((Abs(this[i,j])< 100) ? " " : "")+((Abs(this[i,j])< 10) ? " " : "")+((this[i,j]>=-0.001) ? " " : "")+string.Format(" {0:N5}",this[i,j]);
             }
             Out[i]+=" |";
         }
@@ -175,7 +160,7 @@ public class matrix
             for (int j = 0; j < width; ++j)
             {
 
-                Out+=((this[i,j]>=0 && j>0) ? "+" : "")+string.Format(" {0:N3}",this[i,j])+$" * x[{j}] ";
+                Out+=((this[i,j]>=0 && j>0) ? "+" : "")+string.Format(" {0:N5}",this[i,j])+$" * x[{j}] ";
             }
             if (i<height-1)
                 Out+=$" = {b[i,0]} \n";
@@ -194,7 +179,7 @@ public class matrix
             throw new ArgumentException("Symmetric matrices must be square");
 
         for (int j = 0; j < width; ++j)
-            for (int i = j+1; i < width; ++i)
+            for (int i = j; i < width; ++i)
             {
                 this[i,j]=generator.NextDouble();
                 this[j,i]=this[i,j];
@@ -478,7 +463,7 @@ public class matrix
     }
 
     //double precision approximation
-    public static bool approx(double a,double b,double tau=1e-9,double eps=1e-9)
+    public static bool approx(double a,double b,double tau=1e-5,double eps=1e-5)
     {
         if (Abs(a-b)<tau)
             return true;

@@ -10,7 +10,7 @@ all : logA
 #This phony target forces part A to re-run every time, this is good since the RNG changes every time, and I might WANT to try different random matrices
 .PHONY: .FORCE
 logA: A_jacobi.exe  .FORCE
-;$(RUN) $< 7 > $@
+;$(RUN) $< 3 > $@
 
 
 A_jacobi.exe:main.cs jacobi.dll matrix.dll fit.dll

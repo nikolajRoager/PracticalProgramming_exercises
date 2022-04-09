@@ -64,11 +64,11 @@ public static class jacobi
     //Same notation as in numpy, the D matrix has diagonal elemetns, which are the eigenvalues
     //V has each column being an eigenvector
     //NOTE, this is only works for A being symmetric matrix, as specified in the exercise
-    public static (matrix D, matrix V) getDV(matrix constA , double tau = 1e-9, double eps = 1e-9)
+    public static (matrix D, matrix V) getDV(matrix constA , double tau = 1e-12, double eps = 1e-12)
     {
         matrix V =new  matrix(constA.height,constA.width);
         matrix A = constA.copy();//This method is destructive to the matrix, take a copy of the original matrix so we don't break it
-        //This is much the way you suggested we do this
+        //This is much the way you suggested we do this in the notes, not the homework page
         bool changed=false;
         int iteration = 0;
         do
@@ -98,18 +98,64 @@ public static class jacobi
                     if(!  matrix.approx(new_a_pp,a_pp,tau ,eps)|| !  matrix.approx(new_a_qq,a_qq,tau ,eps)  )
                     {
                         changed=true;
-                        timesJ(A,p,q, theta);//theta
-                        Jtimes(A,p,q, -theta);//-theta, i.e. this is do being sandwhich
+                        //I had to make the timesJ functions, but I do NOT want to call
 
 
-                        timesJ(V,p,q, theta);
+ //                       timesJ(A,p,q, c,s);//theta
+ //                       Jtimes(A,p,q, c,-s);//-theta, i.e. this is being sandwhiched
+
+
+                        //Since I know what the elements are going to end up as, I just apply both operations at once:
+
+                        for(int i=0;i<A.height;i++)
+                        {
+                            if (i!=q && i !=p)
+                            {
+
+                                //I only bother saving in the top half of the matrix, it is symmetric afterall
+                                double a_ip= i < p ? A[i,p] :A[p,i] ;
+                                double a_iq=i < q ? A[i,q] :A[q,i];
+                                double Aip=c*a_ip-s*a_iq;
+                                double Aiq=s*a_ip+c*a_iq;
+
+                                //Only bother writing to the top half of the matrix
+                                if (i<p)
+                                    A[i,p]=Aip;
+                                else
+                                    A[p,i]=Aip;
+
+                                if (i<q)
+                                    A[i,q]=Aiq;
+                                else
+                                    A[q,i]=Aiq;
+                            }
+                        }
+                        //save, as to not break when we overwrite
+                        double App = A[p,p];
+                        double Aqq = A[q,q];
+                        double Apq = A[p,q];
+                        A[p,p]=new_a_pp;
+                        A[q,q]=new_a_qq;
+                        //0 by design
+                        A[p,q]=0;
+                        A[q,p]=0;//Lower half, in general I don't write to this, but we might as well make sure this is set to 0
+
+
+
+                        //Same as: timesJ(V,p,q, c,s);
+                        for(int i=0;i<A.height;i++)
+                        {
+                            double v_ip=V[i,p];
+                            double v_iq=V[i,q];
+                            V[i,p]=c*v_ip-s*v_iq;
+                            V[i,q]=s*v_ip+c*v_iq;
+                        }
                     }
                 }
             }
             ++iteration;
         }
         while(changed);
-
 
 
 
@@ -151,8 +197,8 @@ public static class jacobi
                     if(!  matrix.approx(new_a_pp,a_pp,tau ,eps)|| !  matrix.approx(new_a_qq,a_qq,tau ,eps)  )
                     {
                         changed=true;
-                        timesJ(A,p,q, theta);//theta
-                        Jtimes(A,p,q, -theta);//-theta, i.e. this is do being sandwhich
+                        timesJ(A,p,q, c,s);//theta
+                        Jtimes(A,p,q, c,-s);//-theta, i.e. this is do being sandwhich
 
 
                         //timesJ(V,p,q, theta); //theta

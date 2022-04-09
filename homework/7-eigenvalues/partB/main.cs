@@ -82,42 +82,15 @@ public static class main
         //Plot only the lowest 5 energies and save their states
         for (int i = 0; i < Eigenstates.height; ++i)
         {
+            //The eigenvectors are not normalized ... as vectors, but not as functions.
+            //Apparently dividing by the squareroot of the stepsize solves this, I am honestly not sure why the squareroot. I just tried dividing by the stepsize, and then I guessed this and it works.
 
-            WriteLine($" {dr*i}\t{Eigenstates[i,0]}\t{Eigenstates[i,1]}\t{Eigenstates[i,2]}\t{Eigenstates[i,3]}\t{Eigenstates[i,4]}");
+            WriteLine($" {dr*i}\t{Eigenstates[i,0]/Sqrt(dr)}\t{-Eigenstates[i,1]/Sqrt(dr)}\t{-Eigenstates[i,2]/Sqrt(dr)}\t{-Eigenstates[i,3]/Sqrt(dr)}");
 
         }
 
 
         return 0;
-/*
-        (matrix D, matrix V) =jacobi.getDV(A);
-
-        WriteLine(" ");
-        WriteLine(D.getString("D ="));
-
-        WriteLine(" ");
-
-        matrix VTV = V.transpose()*V;
-        matrix VVT = V*V.transpose();
-        matrix VDVT = V*D*V.transpose();
-        matrix VTAV = V.transpose()*A*V;
-
-        bool pass0 = VTV.approx(unity);
-        bool pass1 = VVT.approx(unity);
-        bool pass2 = VDVT.approx(A);
-        bool pass3 = VTAV.approx(D);
-        WriteLine(VTV.getString( "V^T V   ="));
-        WriteLine( "V^T V   = 1 ? " + (pass0  ? "PASS" : "FAIL") );
-        WriteLine(VVT.getString( "V V^T   ="));
-        WriteLine(  "V V^T   = 1 ? " + (pass1 ? "PASS" : "FAIL"));
-        WriteLine(VDVT.getString("V D V^T ="));
-        WriteLine( "V D V^T   = A ? " +  (pass2 ? "PASS" : "FAIL"));
-        WriteLine(VTAV.getString("V^T A V ="));
-        WriteLine( "V^T A V   = D ? " +  (pass3 ? "PASS" : "FAIL"));
-
-        WriteLine( ( pass0 && pass1 && pass2 && pass3 ? "ALL PASSED" : "SOME FAILED"));
-        return 0;
-*/
     }
 
 }
