@@ -23,7 +23,7 @@ public class genlist<T>
 
     public T get(int i)
     {
-        if (i>0)
+        if (i>=0)
             return data[i];//if i>n we get an error, so no reason to throw anything manually
         else
             return data[n-1-i];//I like the python way of accessing the back of the array, lets copy that
