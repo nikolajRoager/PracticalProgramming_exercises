@@ -1,15 +1,7 @@
 set term png
-set out "sin.png"
-set title "$y=-y''$"
-set xlabel "$x/\pi$"
+set out "orbits.png"
+set title "Orbits"
+set xlabel "$x$"
 set ylabel "$y$ "
 set key out
-plot  "sin.tsv" using ($1/pi):2 with line title "$y(x)$ (RK 45)",\
-"sin.tsv" using ($1/pi):4 with line linetype 2 title " true: $sin(x)$"
-set out "pendulum.png"
-set title "$\ddot{\theta}=-0.25*\dot{\theta} - 5.0 *\sin(\theta)$"
-set xlabel "$t$"
-set ylabel ""
-set key out
-plot  "pend.tsv" using 1:2 with line title "$\theta(t)$ (RK 45)",\
-"pend.tsv" using 1:3 with line title "$\omega(t)=\dot{\theta}(t)$ (RK 45)"
+plot  "threebody.tsv" using 2:3 with line title "planet 0"

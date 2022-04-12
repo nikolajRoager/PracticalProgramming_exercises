@@ -1,77 +1,94 @@
 using System;
 using static System.Console;
 using static ode;
+using static vec;
 
 public static class main
 {
     public static int Main()
     {
-        //As I can not know how many parameters are needed in y, it is represented by a "doublelist", an arbitrary length function of doubles
-        //looking for representing y'' = -y, need data=(y,y')
-        System.Func<double,doublelist,doublelist> ODEsin = delegate(double x,doublelist data)
+
+        //Here data=(pos0.xyz,v0.xyz, pos1.xyz, v1.xyz, pos2.xyz, v2.xyz)
+        System.Func<double,doublelist,doublelist> ODEtribody = delegate(double x,doublelist data)
         {
 
-            doublelist Out = new doublelist(2);
-            Out[0] = data[1];//y' = y'
-            Out[1] = -data[0];// y'' = -y
+            doublelist Out = new doublelist(18);
+
+            double m0=1;
+            double m1=10;
+            double m2=0;
+
+            double G=1;
+
+
+
+            //Upload velocity -> derivative of position at once
+            Out[0]  = data[3];
+            Out[1]  = data[4];
+            Out[2]  = data[5];
+            Out[6]  = data[9];
+            Out[7]  = data[10];
+            Out[8]  = data[11];
+            Out[12] = data[15];
+            Out[13] = data[16];
+            Out[14] = data[17];
+
+            vec pos0 = new vec(data[0],data[1],data[2]);
+            vec pos1 = new vec(data[6],data[7],data[8]);
+            vec pos2 = new vec(data[12],data[13],data[14]);
+
+            vec Acc0 = (G*m1/dot(pos0-pos1,pos0-pos1)*(pos1-pos0)/System.Math.Sqrt(dot(pos0-pos1,pos0-pos1))+G*m2/dot(pos0-pos2,pos0-pos2)*(pos2-pos0)/System.Math.Sqrt(dot(pos0-pos2,pos0-pos2)) );
+
+            Out[3] = Acc0.x;
+            Out[4] = Acc0.y;
+            Out[5] = Acc0.z;
+            Out[9] =0;
+            Out[10]=0;
+            Out[11]=0;
+            Out[15]=0;
+            Out[16]=0;
+            Out[17]=0;
+
             return Out;
         };
 
 
-        doublelist sin0 = new doublelist(2);
-        sin0[0] = 0;//sin(0)
-        sin0[1] = 1;//sin'(0)=cos(0)
+        doublelist planets0 = new doublelist(18);
+        planets0[0] = -5;
+        planets0[1] = 0;
+        planets0[2] = 0;
+        planets0[3] = 0;
+        planets0[4] = 1.0;
+        planets0[5] = 0;
+        planets0[6] = 0;
+        planets0[7] = 0;
+        planets0[8] = 0;
+        planets0[9] = 0;
+        planets0[10] = 0;
+        planets0[11] = 0;
+        planets0[12] = 0;
+        planets0[13] = 0;
+        planets0[14] = 0;
+        planets0[15] = 0;
+        planets0[16] = 0;
+        planets0[17] = 0;
 
-        genlist<doublelist> sin_x = new genlist<doublelist>();
-        doublelist x_list0 = new doublelist();
-        (sin_x, x_list0) =ode.driver(
-            ODEsin,
+        genlist<doublelist> planets = new genlist<doublelist>();
+        doublelist t_list = new doublelist();
+        (planets , t_list ) =ode.driver(
+            ODEtribody,
             0,
-            System.Math.PI*4,
-            sin0,
+            50,
+            planets0,
             0.01,  //h initial
             0.0001,//Absolute error
             0.0001,//Relative and absol
-            0.2    //Max stepsize
+            1.0
         );
 
-        for (int i = 0; i<sin_x.size; ++i)
+        for (int i = 0; i<planets.size; ++i)
         {
-            WriteLine($"{x_list0[i]}\t{sin_x[i][0]}\t{sin_x[i][1]}\t{System.Math.Sin(x_list0[i])}");
-        }
-
-
-        //Here data=(theta,omega)
-        System.Func<double,doublelist,doublelist> ODEpendulum = delegate(double x,doublelist data)
-        {
-
-            doublelist Out = new doublelist(2);
-            Out[0] = data[1];
-            Out[1] = -0.25*data[1]-5.0*System.Math.Sin(data[0]);
-            return Out;
-        };
-
-
-        doublelist pend0 = new doublelist(2);
-        pend0[0] = System.Math.PI - 0.1;
-        pend0[1] = 0;
-
-        genlist<doublelist> pend = new genlist<doublelist>();
-        doublelist pend_t_list = new doublelist();
-        (pend , pend_t_list ) =ode.driver(
-            ODEpendulum,
-            0,
-            10,
-            pend0,
-            0.01,  //h initial
-            0.0001,//Absolute error
-            0.0001,//Relative and absol
-            0.2    //Max stepsize
-        );
-
-        for (int i = 0; i<pend_t_list.size; ++i)
-        {
-            Error.WriteLine($"{pend_t_list [i]}\t{pend [i][0]}\t{pend [i][1]}");
+            WriteLine($"{t_list[i]}\t{planets [i]}");
         }
 
         return 0;

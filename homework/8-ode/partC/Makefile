@@ -13,7 +13,7 @@ threebody.tsv : partC.exe
 ;$(RUN) $< 1> threebody.tsv
 
 
-partB.exe:main.cs ode.dll vec.dll genlist.dll doublelist.dll
+partC.exe:main.cs ode.dll vec.dll genlist.dll doublelist.dll
 ;$(CSC) $< -target:exe -reference:ode.dll -reference:doublelist.dll -reference:vec.dll -reference:genlist.dll  -out:$@
 
 
@@ -33,4 +33,4 @@ genlist.dll : genlist.cs
 .PHONY: clean
 
 clean:
-;rm -f *.dll *.exe log* *.png fit*.tsv
+;rm -f *.dll *.exe log* *.png *.tsv
