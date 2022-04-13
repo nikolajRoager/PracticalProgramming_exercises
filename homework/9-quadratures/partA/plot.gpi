@@ -1,0 +1,8 @@
+set term png
+set out "erf.png"
+set title "$erf(z)$"
+set xlabel "$z$"
+set ylabel "$erf(z)$ "
+set key out
+plot  "erf.tsv" using 1:2 with line title "numeric",\
+"erf.table.tsv" using 1:2 with line linetype 2 title "tabulated"
