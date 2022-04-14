@@ -1,0 +1,7 @@
+NOTE, Monte Carlo is random, and give DIFFERENT results each run (different seeds). It will occasionally fail to get within error of te true result, this is to be expected, more often than not it should work
+plain integral of x*y from 0,0 to 1,1 =0.249466434344433±0.00220250176211898  PASS
+quasi integral of x*y from 0,0 to 1,1 =0.249758665619106±0.000315150283033167  PASS
+plain integral of f(x,y)=1 if x^2+y^2<0.8, otherwise 0  from 0,0 to 1,1 =0.5074±0.00499945237001014 
+quasi integral of f(x,y)=1 if x^2+y^2<0.8, otherwise 0  from 0,0 to 1,1 =0.503±0 
+plain integral of (1-Cos(X[0])*Cos(X[1])*Cos(X[2]))/(PI*PI*PI) from 0,0,0 to PI PI PI =1.38567424404056±0.00698932868918308  PASS
+quasi integral of (1-Cos(X[0])*Cos(X[1])*Cos(X[2]))/(PI*PI*PI) from 0,0,0 to PI PI PI =1.39064511682198±0.00206185712861795  PASS
