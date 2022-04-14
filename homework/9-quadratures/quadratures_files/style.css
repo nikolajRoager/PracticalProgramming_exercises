@@ -1,0 +1,25 @@
+.grey {color:darkgrey; background-color:lightgrey}
+A         {text-decoration: none}
+A:link    {text-decoration: none; color: Blue}
+A:visited {color: DarkRed}
+A:hover   {text-decoration: underline; color: Red; background: yellow}
+/*
+P	{text-indent:0ex;margin-top:1ex;margin-bottom:1ex}
+OL	{margin-left:0em;margin-top:0;margin-bottom:0}
+OL LI 	{margin-left:0em;margin-top:1px;margin-bottom:1px}
+UL	{margin-left:0em;margin-top:0;margin-bottom:0}
+*/
+CODE {
+	background:lightgrey;
+	font-family:monospace,sans-serif;
+	font-size:small;
+/*
+	border-style:dashed;
+*/
+	border-width:1px;
+	border-radius:5px;
+	padding:2px
+}
+PRE {border-style:dashed;border-width:1px;border-radius:2px;padding:5px}
+DT {font-weight:bold;margin-top:1ex}
+DL DD {margin-left:1em;margin-bottom:0em}

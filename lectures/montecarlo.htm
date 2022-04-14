@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="montecarlo_files/style.html">
+</head>
+<body data-new-gr-c-s-check-loaded="8.896.0" data-gr-ext-installed="">
+<font size="-1">
+<a href="http://80.251.205.75/~fedorov/prog/">←to practical programming</a>
+</font>
+
+<h3>Homework "Monte Carlo integration"</h3>
+<ol type="A">
+
+<li><p>(6 points)
+<b>Plain Monte Carlo integration</b>
+</p><ul>
+<li> Implement plain Monte Carlo multi-dimensional integration, e.g. along the
+following lines:
+<br>
+<textarea rows="12" cols="100">static (double,double) plainmc(Func&lt;vector,double&gt; f,vector a,vector b,int N){
+        int dim=a.size; double V=1; for(int i=0;i&lt;dim;i++)V*=b[i]-a[i];
+        double sum=0,sum2=0;
+	var x=new vector(dim);
+        for(int i=0;i&lt;N;i++){
+                for(int k=0;k&lt;dim;k++)x[k]=a[k]+RANDOM01*(b[k]-a[k]);
+                double fx=f(x); sum+=fx; sum2+=fx*fx;
+                }
+        double mean=sum/N, sigma=Sqrt(sum2/N-mean*mean);
+        var result=(mean*V,sigma*V/Sqrt(N));
+        return result;
+}
+</textarea>
+</li><li> Calculate some interesting two-dimensional integrals with your
+Monte-Carlo routine.
+
+</li><li> Try calculate
+<pre><i><b>∫</b><sub><sub>0</sub></sub><sup><sup>π</sup></sup>&nbsp;&nbsp;<sup>dx</sup>/<sub>π</sub>&nbsp;<b>∫</b><sub><sub>0</sub></sub><sup><sup>π</sup></sup>&nbsp;&nbsp;<sup>dy</sup>/<sub>π</sub>&nbsp;<b>∫</b><sub><sub>0</sub></sub><sup><sup>π</sup></sup>&nbsp;&nbsp;<sup>dz</sup>/<sub>π</sub>&nbsp;[1-cos(x)cos(y)cos(z)]<sup>-1</sup> =&nbsp;Γ(1/4)<sup>4</sup>/(4π<sup>3</sup>)&nbsp;≈&nbsp;
+1.3932039296856768591842462603255
+</i></pre><br>
+
+This is a difficult singular integral, do not use it for your tests and error
+estimates, use something less sungular.
+
+</li></ul>
+
+</li><li><p> (3 points) <b>Quasi-random sequences</b>
+
+</p><ul>
+
+<li>Implement a multidimensional Monte-Carlo integrator that uses
+low-discrepancy (quasi-random) sequences.  The error could be
+estimated by using two different sequences.  Compare the scaling
+of the error with your pseudo-random Monte-Carlo integrator.  </li>
+
+</ul>
+
+</li><li><p> (1 point) <b>Stratified sampling</b>
+
+</p><ul>
+
+<li>
+Implement recursive stratified sampling, the variant where the subroutine
+receives the number of points N as an argument. Something like
+	<pre>If N&lt;nmin return N-point plain Monte Carlo estimate of integral and variance;
+Sample nmin points and estimate the integral and the variance;
+Find the dimension with largest sub-variance;
+Subdivide the volume along this dimension;
+Divide the remaning points between the two sub-volumes proportional to sub-variances;
+Dispatch two recursive calls on the sub-volumes;
+Estimate the grand integral and grand error;
+Return the grand integral and the grand error;
+	</pre>
+
+<!--
+Make a routine that integrates a function of two variables,
+<code><i>f(x,y)</code></i>, in a two-dimensional area <i>{(x,y):
+a&lt;x&lt;b, c(x)&lt;y&lt;d(x)}</i> limited in <i>x</i>-direction by the
+lines <i>x=a</i>, <i>x=b</i> and in <i>y</i>-direction by the curves
+<i>y=c(x)</i>, <i>y=d(x)</i> by recursively calling your one-dimensional
+adaptive integrator,
+<br><tt><i>
+<big>&int;</big><sub><sub>a</sub></sub><sup><sup>b</sup></sup> dx
+<big>&int;</big><sub><sub>c(x)</sub></sub><sup><sup>d(x)</sup></sup> dy
+f(x,y) =
+<big>&int;</big><sub><sub>a</sub></sub><sup><sup>b</sup></sup> dx
+F(x) ,
+</tt></i><br>
+where
+<br><tt><i>
+F(x) = 
+<big>&int;</big><sub><sub>c(x)</sub></sub><sup><sup>d(x)</sup></sup> dy
+f(x,y) .
+</tt></i><br>
+-->
+</li>
+
+</ul>
+
+<!--
+<li><p> (0 points)
+
+	<ul>
+<li> Implement an adaptive one-dimensional integrator with random
+abscissas.  Compare with your ordinary adaptive integrator. Try
+Clenshaw-Curtis variable transformation.
+	</ul>
+	<ul>
+
+<li>Make a routine that integrates a function of three variables,
+<code>f(x,y,z)</code>, in a three-dimensional rectangular area by recursively
+calling your one-dimensional adaptive integrator and compare it with
+your stratified sampler.
+
+<li>Implement recursive stratified sampling and make some interesting
+illustrations.
+
+	</ul>
+
+</ol>
+-->
+
+<!--
+<hr> <center> <font size=-1>
+"<a href=http://www.gnu.org/copyleft>Copyleft</a>"
+<a href=http://www.gnu.org/copyleft/gpl.html>&copy</a> 2004-2006
+<a href=http://www.ifa.au.dk/~fedorov/>D.V.Fedorov</a>
+(fedorov at phys dot au dot dk</a>)
+</center> </font>
+
+-->
+
+
+</li></ol></body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>

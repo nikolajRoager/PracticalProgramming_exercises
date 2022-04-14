@@ -1,0 +1,4 @@
+integrate(Sqrt,0,1)=0.666666666667117 PASS
+integrate(1/Sqrt,0,1)=1.99999999999999 PASS
+integrate(4 Sqrt(1-x^2),0,1)=3.14159265358994 PASS
+integrate(ln(x)/Sqrt,0,1)=-3.99999999999999 PASS
