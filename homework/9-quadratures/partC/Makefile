@@ -4,12 +4,12 @@
 CSC = mcs
 RUN = mono
 
-all : logC
-;cat logC
-;python3 integrate.py
+all : OutC.txt
+;cat OutC.txt
 
-logC log: partC.exe
-;$(RUN) $< 7 1> logC 2>log
+OutC.txt log: partC.exe
+;$(RUN) $< 7 1> OutC.txt 2>log
+;python3 integrate.py >>  OutC.txt
 
 
 partC.exe:main.cs quad.dll
@@ -21,4 +21,4 @@ quad.dll : quad.cs
 .PHONY: clean
 
 clean:
-;rm -f *.dll *.exe log* *.png erf.tsv
+;rm -f *.dll *.exe log* *.png erf.tsv *.txt

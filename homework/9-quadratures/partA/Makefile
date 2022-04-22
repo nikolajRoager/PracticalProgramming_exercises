@@ -4,14 +4,14 @@
 CSC = mcs
 RUN = mono
 
-all : logA erf.png
-;cat logA
+all : outA.txt erf.png
+;cat outA.txt
 
 erf.png: erf.tsv
 ;pyxplot plot.gpi
 
-logA erf.tsv: partA.exe
-;$(RUN) $< 7 1> logA 2>erf.tsv
+outA.txt erf.tsv: partA.exe
+;$(RUN) $< 7 1> outA.txt 2>erf.tsv
 
 
 partA.exe:main.cs quad.dll

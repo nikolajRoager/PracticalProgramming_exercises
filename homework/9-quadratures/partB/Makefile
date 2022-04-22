@@ -4,12 +4,12 @@
 CSC = mcs
 RUN = mono
 
-all : logB
-;cat logB
+all : outB.txt
+;cat outB.txt
 
-logB log: partB.exe
-;$(RUN) $< 7 1> logB 2>log
-;python3 integrate.py
+outB.txt log: partB.exe
+;$(RUN) $< 7 1> outB.txt 2>log
+;python3 integrate.py >> outB.txt
 
 
 partB.exe:main.cs quad.dll
