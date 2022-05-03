@@ -4,7 +4,7 @@ using static System.Math;
 
 public static class quad
 {
-    public static double integrate(Func <double,double> F, double x_min, double x_max, double abs_acc=1e-9, double rel_acc=1e-9, double point_1=double.NaN, double point_2=double.NaN)
+    public static (double,double) integrate(Func <double,double> F, double x_min, double x_max, double abs_acc=1e-9, double rel_acc=1e-9, double point_1=double.NaN, double point_2=double.NaN)
     {
         //Step size
         double h=x_max-x_min;
@@ -25,16 +25,21 @@ public static class quad
 
         //If within error return
         if (err <= abs_acc+rel_acc*Abs(Q))
-            return Q;
+            return (Q,err);
 
         //Otherwise integrate the two half-intervals, notably the old 1/6 and 2/6 way points are now the new 2/6 and 4/6 points for the first halves, and the old 4/6 and 5/6 points are now the new 2/6 and 4/6 points:
 
  //Old points  I   I        I   I
           //-I-I---I-I----I-I---I-I-
 //New points I I   I I    I I   I I
-        else return integrate(F,x_min,(x_max+x_min)/2,abs_acc/Sqrt(2),rel_acc,point_0,point_1)+
-                    integrate(F,(x_min+x_max)/2,x_max,abs_acc/Sqrt(2),rel_acc,point_2,point_3);
-        return 0;
+        else
+        {
+            double Q1, E1, Q2, E2;
+            (Q1,E1) =integrate(F,x_min,(x_max+x_min)/2,abs_acc/Sqrt(2),rel_acc,point_0,point_1);
+            (Q2,E2) = integrate(F,(x_min+x_max)/2,x_max,abs_acc/Sqrt(2),rel_acc,point_2,point_3);
+
+            return (Q1+Q2,Sqrt(E1*E1+E2*E2));
+        }
     }
 
 }
