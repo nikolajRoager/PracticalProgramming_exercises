@@ -2,9 +2,6 @@ Homework 8, ordinary differential equaitons
 ===========
 
 
-
-
-
 Part C IS NOT DONE YET, MISSING INITIAL CONDITION NOT FOUND
 
 I use my generic list class from one of the previous homeworks to store the output of every substep.

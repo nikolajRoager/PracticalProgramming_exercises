@@ -1,9 +1,8 @@
-Homework 9 or something like that, quadratures
+Homework 10 or something like that, Monte Carlo
 =========
-I do believe I have done all parts.
+I do have done part A and B
 
-
-NOTE the monte carlo method is random, and in part A I use the buil in RNG, which is different each run, during my tests I did get all the tests to corrcetly work, but some times some will randomly fail.
+NOTE the monte carlo method is random, and in part A I use the built in RNG, which is different each run, during my tests I did get all the tests to corrcetly work, but some times some will randomly fail.
 
 ALSO NOTE , I use fairly high number of points, this means my results are accuracte, but it might take half a minute to run
 

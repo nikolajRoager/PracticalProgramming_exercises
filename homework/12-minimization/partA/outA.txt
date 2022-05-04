@@ -1,0 +1,19 @@
+----------------------------------------------
+Demonstrating Quasi newton optimization method
+----------------------------------------------
+Demonstration one, find max of f(x)=exp(-(x-2)^2) (true solution x=2
+Starting at x0 = (0.0) with precision 10^-6. Now Running ...
+
+Got predicted max at x=|    0.00000 |
+FAIL this is not within 10^-6 of 2.0
+
+Demonstration Rosenbrock, find minimum of f(x,y)=() (minimum is at 1,1)
+Starting at x0 = (0,0) with precision 10^-6. Now Running ...
+
+                     |    0.00000 |
+Got predicted root x=|    2.00000 |
+
+         |    0.00000 |
+Has f(x)=|    2.00000 |
+
+FAIL this is not within 10^-6 of (1,1)

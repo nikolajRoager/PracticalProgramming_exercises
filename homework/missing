@@ -4,3 +4,5 @@ Missing part C of monte-carlo
 Missing exercise latex
 
 MISSING REDO QUADRATURE PART B AND C, AND EVERYTHING ELSE, MUST INCLUDE ERROR BARS IN ALL OUTPUTS BOTH ESTIMATED ERRORS AND TOLERANNCE.
+
+Replace column matrices with specific vector class at all times, just to make the code more readable, will not change anything

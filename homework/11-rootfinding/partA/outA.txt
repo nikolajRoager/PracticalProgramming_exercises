@@ -1,0 +1,46 @@
+----------------------------
+Demonstrating newtons method
+----------------------------
+Demonstration one, find 0=f(x)=cos(x) (true solution, x=(n+0.5) pi)
+Starting at x0 = (0.2) with precision 10^-6. Now Running ...
+
+Got predicted root x=|    4.71239 |
+
+Has f(x)=|    0.00000 |
+
+PASS this is within 10^-6 of 0
+
+Demonstration two, find 0=f(x,y)=(Sin(x+y),Sin(x)) (true solution, x+y=n pi and x=n pi)
+Starting at x0 = (1.0,1.0) with precision 10^-6. Now Running ...
+
+                     |    3.14159 |
+Got predicted root x=|    0.00000 |
+
+         |   0.00000 |
+Has f(x)=|    0.00000 |
+
+PASS this is within 10^-6 of 0
+
+Demonstration three: f(x,y,z)=(Sin(x+y),Sin(y+z),Sin(x+z)) (Solution x,y,z any integer multiples of pi)
+Starting at x0 = (1.0,1.0,1.0) with precision 10^-6. Now Running ...
+
+                     |    3.14159 |
+Got predicted root x=|    0.00000 |
+                     |   0.00000 |
+
+         |    0.00000 |
+Has f(x)=|   0.00000 |
+         |    0.00000 |
+
+PASS this is within 10^-6 of 0
+
+Demonstration Rosenbrock, find 0=f(x,y)=(-2+2x- 400xy+400x^3, 200(y-x^2)) (gradient of Rosenbrock function, i.e. an extremum for that function, only solution is x=y=1)
+Starting at x0 = (-1,2) with precision 10^-6. Now Running ...
+
+                     |    1.00000 |
+Got predicted root x=|    1.00000 |
+
+         |    0.00000 |
+Has f(x)=|   0.00000 |
+
+PASS this is within 10^-6 of 0
