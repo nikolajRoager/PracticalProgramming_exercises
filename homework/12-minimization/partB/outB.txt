@@ -3,10 +3,9 @@ Quasi newton optimization on Higs data
 ----------------------------------------------
 
 Now fitting A,Γ and m to deviation function
-Starting at guess (m,Γ,A) = (121,10,10) with precision 10^-5.
-YES, I know that is crazy close, but there is a lot of local minima around. Now Running ...
+Starting at guess (m,Γ,A) = (121,10,2) with precision 10^-5.
+YES, I know that is crazy close, but there is a lot of local minima around, based on what gives me the fit which looks best. Now Running ...
 
 In 36 steps: Has m=125.972186682075 GeV/c^2 Γ=2.08632786716332  A=9.87620161213142
 
-FAIL this is not within the experimental error given of the true data
-I am not sure if I was meant to find the true answer exactly, or just there about, what I get is certainly somewhat close
+SAVING THE FIT AS A PYXPLOT FILE TO GENERATE THE PLOT

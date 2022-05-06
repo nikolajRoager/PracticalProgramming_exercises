@@ -1,0 +1,8 @@
+#THIS FILE IS GENERATED EACH TIME THE PROGRAM IS RUN, AS A WAY TO IMPLEMENT THE FITTED DATA
+set term png
+set out "Higgsdata.png"
+set title "Looks good to me"
+set xlabel "E (GeV)"
+set ylabel "$\sigma$ (arb. u.)"
+plot  "higgsdata.tsv" using 1:2:3 with yerrorbars title "data",\ 
+ 9.87620161213142/((x-125.972186682075 )**2+2.08632786716332**2/4) with lines title "fit"

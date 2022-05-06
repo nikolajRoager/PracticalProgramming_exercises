@@ -4,7 +4,7 @@ using static System.Math;
 using static matrix;
 using static vector;
 
-public static class optimizer
+public static class minimizer
 {
     //Mirror function to maximize instead
     public static (vector,int) max_qnewton(Func<vector,double>f, vector x0, double acc=1e-2, bool verbose=false,System.IO.StreamWriter writer =null)
@@ -92,9 +92,9 @@ public static class optimizer
                             //CRAP, deltax was too small, and we got a 0 division, we must retry with a larger little number... unless we have done that too many times already
 
                             if (little>0.25)
-                                Error.WriteLine("ABORT: Got 0 division in Quasi Newton methods gradient too many times");
+                                WriteLine("ABORT: Got 0 division in Quasi Newton methods gradient too many times");
 
-                            Error.WriteLine("WARNING: Got 0 division in Quasi Newton method gradient, this may be caused by your computer having less precision for double point numbers than expected. Will retry with a larger Delta x");
+                            WriteLine("WARNING: Got 0 division in Quasi Newton method gradient, this may be caused by your computer having less precision for double point numbers than expected. Will retry with a larger Delta x");
                             redo = true;
                             x = resize(x0.copy(),n);//Reset our guess, and try again with a larger little number
                             little*=2;
@@ -125,11 +125,16 @@ public static class optimizer
                     double lambda = 1;
                     vector S = Dx;
                     vector x_new = x+S;
+                    bool linesearch_fail = true;
+
                     for (int i = 0; i < 32; ++i)
                     {
                         // Perform backtracking lambda -> lambda/2 and update s until f(x+s)<f(x)+alpha dot(s,∇ f(x)) (or until lambda too small)
                         if (f(x_new) < fx+ alpha*S.dot(GradFx)  )
+                        {
+                            linesearch_fail =false;
                             break;
+                        }
                         lambda*=0.5;
                         S = lambda*Dx;
                         x_new = x+S;
@@ -172,9 +177,9 @@ public static class optimizer
                             //CRAP, deltax was too small, and we got a 0 division, we must retry with a larger little number... unless we have done that too many times already
 
                             if (little>0.25)
-                                Error.WriteLine("ABORT: Got 0 division in Quasi Newton methods gradient too many times");
+                                WriteLine("ABORT: Got 0 division in Quasi Newton methods gradient too many times");
 
-                            Error.WriteLine("WARNING: Got 0 division in Quasi Newton method gradient, this may be caused by your computer having less precision for double point numbers than expected. Will retry with a larger Delta x");
+                            WriteLine("WARNING: Got 0 division in Quasi Newton method gradient, this may be caused by your computer having less precision for double point numbers than expected. Will retry with a larger Delta x");
                             redo = true;
                             x = resize(x0.copy(),n);//Reset our guess, and try again with a larger little number
                             little*=2;
@@ -185,6 +190,18 @@ public static class optimizer
                     }
 
 
+                    if (linesearch_fail)
+                    {
+                        B = new matrix(n,n);
+                        if (verbose)
+                        {
+                            WriteLine("RESET B AS LINESEARCH FAILED");
+                            WriteLine(B.getString("B="));
+                        }
+
+                    }
+                    else
+                    {
 
                     // Let y = ∇f(x + s)-∇f(x) and u = s- By
                     vector y = GradFx_new-GradFx;
@@ -214,12 +231,13 @@ public static class optimizer
                     }
                     else
                     {
-                        B = new matrix(n,n);
                         if (verbose)
                         {
-                            WriteLine("Reset B to identity");
+                            WriteLine("KEPT B");
                             WriteLine(B.getString("B="));
                         }
+                    }
+
                     }
 
                     //Now, we already have whatever the gradient should be next step.

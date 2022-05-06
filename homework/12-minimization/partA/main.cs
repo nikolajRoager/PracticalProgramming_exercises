@@ -1,7 +1,7 @@
 using System;
 using static System.Console;
 using static System.Math;
-using static optimizer;
+using static minimizer;
 using static vector;
 
 public static class main
@@ -59,7 +59,7 @@ public static class main
         WriteLine(root1.getString("Got predicted root x="));
 
         WriteLine("");
-        WriteLine(root1.getString($"In {steps0} steps: Has f(x)="));
+        WriteLine(root1.getString($"In {steps1} steps: Has f(x)="));
         WriteLine("");
         if (root1.approx(new vector(1.0,1.0),1e-5,1e-5))
         {
@@ -81,7 +81,7 @@ public static class main
         WriteLine(root2.getString("Got predicted root x="));
 
         WriteLine("");
-        WriteLine(root2.getString($"In {steps0} steps: Has f(x)="));
+        WriteLine(root2.getString($"In {steps2} steps: Has f(x)="));
         WriteLine("");
         if ( approx(f2(root2),0.0,1e-5,1e-5))
         {

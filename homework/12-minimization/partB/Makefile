@@ -3,17 +3,19 @@
 CSC = mcs
 RUN = mono
 
-all : outB.txt
+all : outB.txt plot.gpi
 ;cat outB.txt
+;pyxplot plot.gpi
 
-outB.txt : partB.exe
-;$(RUN) $< higgsdata.tsv > outB.txt
+#I generate the plot file as an output, so that I can set the parameters to fit the fit
+outB.txt plot.gpi: partB.exe
+;$(RUN) $< higgsdata.tsv 1> outB.txt 2>plot.gpi
 
 
-partB.exe:main.cs optimizer.dll matrix.dll vector.dll
-;$(CSC) -target:exe -out:$@ -reference:vector.dll -reference:matrix.dll  -reference:optimizer.dll $<
+partB.exe:main.cs minimizer.dll matrix.dll vector.dll
+;$(CSC) -target:exe -out:$@ -reference:vector.dll -reference:matrix.dll  -reference:minimizer.dll $<
 
-optimizer.dll : optimizer.cs matrix.dll vector.dll
+minimizer.dll : minimizer.cs matrix.dll vector.dll
 ;$(CSC) $< -target:library -reference:matrix.dll -reference:vector.dll  -out:$@
 
 matrix.dll : matrix.cs vector.dll

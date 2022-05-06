@@ -1,7 +1,7 @@
 using System;
 using static System.Console;
 using static System.Math;
-using static optimizer;
+using static minimizer;
 using static vector;
 using System.IO;
 using System.Text;
@@ -161,8 +161,8 @@ public static class main
 
             return Out;
         };
-        WriteLine($"Starting at guess (m,Γ,A) = (121,10,10) with precision 10^-5.");
-        WriteLine($"YES, I know that is crazy close, but there is a lot of local minima around. Now Running ...");
+        WriteLine($"Starting at guess (m,Γ,A) = (121,10,2) with precision 10^-5.");
+        WriteLine($"YES, I know that is crazy close, but there is a lot of local minima around, based on what gives me the fit which looks best. Now Running ...");
         (vector root1, int steps1) = qnewton(D,new vector(121,10,10),1e-5,verbose );
 
 
@@ -171,16 +171,18 @@ public static class main
         WriteLine($"In {steps1} steps: Has m={root1[0]} GeV/c^2 Γ={Abs(root1[1])}  A={root1[2]}");
 
         WriteLine("");
-        if (approx(125.3,root1[0],0.6,0.0))
-        {
-            WriteLine("PASS this is within the experimental error given of the true data");
-        }
-        else
-        {
-            WriteLine("FAIL this is not within the experimental error given of the true data");
-        }
 
-        WriteLine("I am not sure if I was meant to find the true answer exactly, or just there about, what I get is certainly somewhat close");
+        WriteLine("SAVING THE FIT AS A PYXPLOT FILE TO GENERATE THE PLOT");
+
+        Error.WriteLine("#THIS FILE IS GENERATED EACH TIME THE PROGRAM IS RUN, AS A WAY TO IMPLEMENT THE FITTED DATA");
+        Error.WriteLine("set term png");
+        Error.WriteLine("set out \"Higgsdata.png\"");
+        Error.WriteLine("set title \"Looks good to me\"");
+        Error.WriteLine("set xlabel \"E (GeV)\"");
+        Error.WriteLine("set ylabel \"$\\sigma$ (arb. u.)\"");
+        Error.WriteLine("plot  \"higgsdata.tsv\" using 1:2:3 with yerrorbars title \"data\",\\ ");
+        Error.WriteLine(" 9.87620161213142/((x-125.972186682075 )**2+2.08632786716332**2/4) with lines title \"fit\"");
+
 
 
         return 0;

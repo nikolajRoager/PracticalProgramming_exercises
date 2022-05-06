@@ -10,10 +10,10 @@ outA.txt rosenbrock.tsv himmelblau.tsv : partA.exe
 ;$(RUN) $< > outA.txt
 
 
-partA.exe:main.cs optimizer.dll matrix.dll vector.dll
-;$(CSC) -target:exe -out:$@ -reference:vector.dll -reference:matrix.dll  -reference:optimizer.dll $<
+partA.exe:main.cs minimizer.dll matrix.dll vector.dll
+;$(CSC) -target:exe -out:$@ -reference:vector.dll -reference:matrix.dll  -reference:minimizer.dll $<
 
-optimizer.dll : optimizer.cs matrix.dll vector.dll
+minimizer.dll : minimizer.cs matrix.dll vector.dll
 ;$(CSC) $< -target:library -reference:matrix.dll -reference:vector.dll  -out:$@
 
 matrix.dll : matrix.cs vector.dll
