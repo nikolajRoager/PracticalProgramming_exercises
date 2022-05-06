@@ -21,7 +21,7 @@ public static class main
     public static int Main(string[] args)
     {
         WriteLine($"----------------------------------------------");
-        WriteLine($"Demonstrating Quasi newton optimization method");
+        WriteLine($"Demonstrating Quasi newton minimization method");
         WriteLine($"----------------------------------------------");
 
         bool verbose = false;
@@ -52,8 +52,8 @@ public static class main
 
         WriteLine($"\nDemonstration Rosenbrock, find minimum of f(x,y)=((1-x)^2+100*(y-x^2)^2) (minimum is at 1,1)");
         Func<vector,double> f1 = (X)  => ((1-X[0])*(1-X[0])+100*(X[1]-X[0]*X[0])*(X[1]-X[0]*X[0]) ) ;
-        WriteLine($"Starting at x0 = (0,0) with precision 10^-5. Now Running ...");
-        (vector root1, int steps1) = qnewton(f1,new vector(0,0),1e-5,verbose );
+        WriteLine($"Starting at x0 = (-1,2) with precision 10^-5. Now Running ...");
+        (vector root1, int steps1) = qnewton(f1,new vector(-1,2),1e-5,verbose, new System.IO.StreamWriter("rosenbrock.tsv"));
 
         WriteLine("");
         WriteLine(root1.getString("Got predicted root x="));
@@ -69,6 +69,29 @@ public static class main
         {
             WriteLine("FAIL this is not within 10^-5 of (1,1)");
         }
+
+
+
+        WriteLine($"\nDemonstration Himmelblau, find minimum of f(x,y)=(x^2+y-11)^2+(x+y^2-7)^2\nminima at: (3.0,2.0),(-2.805118, 3.131312),(-3.779310, -3.283186) and (3.584428, -1.848126)");
+        Func<vector,double> f2 = (X)  => ((X[0]*X[0]+X[1]-11)*(X[0]*X[0]+X[1]-11)+(X[0]+X[1]*X[1]-7)*(X[0]+X[1]*X[1]-7));
+        WriteLine($"Starting at x0 = (0,0) with precision 10^-5. Now Running ...");
+        (vector root2, int steps2) = qnewton(f2,new vector(0,0),1e-5,verbose , new System.IO.StreamWriter("himmelblau.tsv"));
+
+        WriteLine("");
+        WriteLine(root2.getString("Got predicted root x="));
+
+        WriteLine("");
+        WriteLine(root2.getString($"In {steps0} steps: Has f(x)="));
+        WriteLine("");
+        if ( approx(f2(root2),0.0,1e-5,1e-5))
+        {
+            WriteLine("PASS the function is within 10^-5 of 0, here; which is the known minimum");
+        }
+        else
+        {
+            WriteLine("FAIL the function is not within 10^-5 of 0, here; which is the known minimum");
+        }
+
         return 0;
     }
 

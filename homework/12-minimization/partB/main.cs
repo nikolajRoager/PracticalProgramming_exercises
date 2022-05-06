@@ -46,6 +46,7 @@ public static class main
         }
 
         double[] higgsdata;
+        int higgsdata_length;
         try
         {
 
@@ -55,7 +56,9 @@ public static class main
             var options = StringSplitOptions.RemoveEmptyEntries;
 
             string[] lines = File.ReadAllLines(file);
-            higgsdata = new double[lines.Length*3];
+
+            higgsdata_length = lines.Length;
+            higgsdata = new double[3*higgsdata_length];
 
 
             for (int i = 0; i < lines.Length; ++i)
@@ -142,44 +145,44 @@ public static class main
 
 
 
+        WriteLine($"\nNow fitting A,Γ and m to deviation function");
+        //Breit Wigner function
+        Func<vector,double> D = delegate(vector X)
+        {
+            double Out=0;
+            for (int i = 0; i < higgsdata_length; ++i)
+            {
+                double Ei    = higgsdata[i*3];//energy
+                double Sigi  = higgsdata[i*3+1];//cross section
+                double DSigi = higgsdata[i*3+2];//its error
+                double FEiX = ( X[2]/((Ei-X[0])*(Ei-X[0])+X[1]*X[1]/4) );
+                Out += Pow((FEiX-Sigi)/DSigi,2);
+            }
 
-        WriteLine($"Demonstration one, find max of f(x)=exp(-(x-2)^2) (true solution x=2");
-        Func<vector,double> f0 = (X)  => Exp( -(X[0]-2)*(X[0]-2));
-        WriteLine($"Starting at x0 = (0.0) with precision 10^-5. Now Running ...");
-        (vector root0, int steps0) = max_qnewton(f0,new vector(0.0),1e-5,verbose );
+            return Out;
+        };
+        WriteLine($"Starting at guess (m,Γ,A) = (121,10,10) with precision 10^-5.");
+        WriteLine($"YES, I know that is crazy close, but there is a lot of local minima around. Now Running ...");
+        (vector root1, int steps1) = qnewton(D,new vector(121,10,10),1e-5,verbose );
+
 
         WriteLine("");
-        WriteLine(root0.getString($"In {steps0} steps: Got predicted max at x="));
+        //As the Γ is squared the minimum might accidentally find it to be negative, just go with the positive solution
+        WriteLine($"In {steps1} steps: Has m={root1[0]} GeV/c^2 Γ={Abs(root1[1])}  A={root1[2]}");
 
-        if (root0.approx(new vector(2.0),1e-5,1e-5))//vector double is understood  as a vector with this element only
+        WriteLine("");
+        if (approx(125.3,root1[0],0.6,0.0))
         {
-            WriteLine("PASS this is within 10^-5 of 2.0");
+            WriteLine("PASS this is within the experimental error given of the true data");
         }
         else
         {
-            WriteLine("FAIL this is not within 10^-5 of 2.0");
+            WriteLine("FAIL this is not within the experimental error given of the true data");
         }
 
+        WriteLine("I am not sure if I was meant to find the true answer exactly, or just there about, what I get is certainly somewhat close");
 
-        WriteLine($"\nDemonstration Rosenbrock, find minimum of f(x,y)=((1-x)^2+100*(y-x^2)^2) (minimum is at 1,1)");
-        Func<vector,double> f1 = (X)  => ((1-X[0])*(1-X[0])+100*(X[1]-X[0]*X[0])*(X[1]-X[0]*X[0]) ) ;
-        WriteLine($"Starting at x0 = (0,0) with precision 10^-5. Now Running ...");
-        (vector root1, int steps1) = qnewton(f1,new vector(0,0),1e-5,verbose );
 
-        WriteLine("");
-        WriteLine(root1.getString("Got predicted root x="));
-
-        WriteLine("");
-        WriteLine(root1.getString($"In {steps0} steps: Has f(x)="));
-        WriteLine("");
-        if (root1.approx(new vector(1.0,1.0),1e-5,1e-5))
-        {
-            WriteLine("PASS this is within 10^-5 of (1,1)");
-        }
-        else
-        {
-            WriteLine("FAIL this is not within 10^-5 of (1,1)");
-        }
         return 0;
     }
 

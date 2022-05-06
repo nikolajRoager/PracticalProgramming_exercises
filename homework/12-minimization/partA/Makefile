@@ -6,7 +6,7 @@ RUN = mono
 all : outA.txt
 ;cat outA.txt
 
-outA.txt : partA.exe
+outA.txt rosenbrock.tsv himmelblau.tsv : partA.exe
 ;$(RUN) $< > outA.txt
 
 

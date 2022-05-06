@@ -7,14 +7,14 @@ using static vector;
 public static class optimizer
 {
     //Mirror function to maximize instead
-    public static (vector,int) max_qnewton(Func<vector,double>f, vector x0, double acc=1e-2, bool verbose=false)
+    public static (vector,int) max_qnewton(Func<vector,double>f, vector x0, double acc=1e-2, bool verbose=false,System.IO.StreamWriter writer =null)
     {
         Func<vector,double> F = (X)  => -f(X);
-        return  qnewton(F,x0,acc,verbose);
+        return  qnewton(F,x0,acc,verbose,writer);
     }
 
 
-    public static (vector,int) qnewton(Func<vector,double>f, vector x0, double acc=1e-2, bool verbose=false)
+    public static (vector,int) qnewton(Func<vector,double>f, vector x0, double acc=1e-2, bool verbose=false, System.IO.StreamWriter writer=null)
     {
 
 
@@ -43,6 +43,8 @@ public static class optimizer
             //We will save the gradient between steps, as we need the gradient both at the start and at the end
             vector GradFx = new vector(n);
 
+            if (writer != null)
+                writer.WriteLine($"{x.asList()}\t{f(x)}");
 
 
             do
@@ -135,6 +137,8 @@ public static class optimizer
 
                     x = x_new;
                     fx = f(x);
+                    if (writer != null)
+                        writer.WriteLine($"{x.asList()}\t{f(x)}");
                     if (verbose)
                     {
                         WriteLine("");
@@ -244,6 +248,8 @@ public static class optimizer
 
         }
 
+        if (writer != null)
+            writer.Close();
         return (x,step);
     }
 }
