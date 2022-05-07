@@ -9,11 +9,16 @@ set title 'Rosenbrock valley function'
 set style line 1 \
     linecolor rgb '#0060ad' \
     linetype 1 linewidth 2 \
-    pointtype 7 pointsize 1
+    pointtype 7 pointsize 0.5
 
+
+set style line 2 \
+    linecolor rgb '#600000' \
+    linetype 1 linewidth 2.0
 
 splot [-2:2] [-1:4] ((1-x)**2+100*(y-x**2)**2) notitle,\
-'rosenbrock.tsv' index 0 using 1:2:3 with lp title 'Quasi newton method' linestyle 1
+'rosenbrock_mesh.tsv' index 0 using 1:2:3 with lp title 'Downhill simplex method' linestyle 1,\
+'rosenbrock_best.tsv' index 0 using 1:2:3 with lines title 'Lowest' linestyle 2\
 
 set output 'himmelblau.png'
 set xlabel 'x'
@@ -22,12 +27,15 @@ set zlabel 'f(x,y)'
 set key below
 set title 'Himmelblau function'
 
-set style line 1 \
-    linecolor rgb '#0060ad' \
-    linetype 1 linewidth 2 \
-    pointtype 7 pointsize 1
 
+splot [-5:5] [-5:5] (x**2+y-11)**2+(x+y**2-7)**2 notitle,\
+'himmelblau_mesh.tsv' index 0 using 1:2:3 with lp title 'Downhill simplex method' linestyle 1,\
+'himmelblau_best.tsv' index 0 using 1:2:3 with lines title 'Lowest' linestyle 2
 
-splot [-4:4] [-4:4] (x**2+y-11)**2+(x+y**2-7)**2 notitle,\
-'himmelblau.tsv' index 0 using 1:2:3 with lp title 'Quasi newton method' linestyle 1
+set output 'himmelblau_2d.png'
+set xlabel 'x'
+set ylabel 'y'
+set key below
+plot [-5:5] [-5:5] 'himmelblau_mesh.tsv' index 0 using 1:2 with lp title 'Downhill simplex method' linestyle 1,\
+'himmelblau_best.tsv' index 0 using 1:2 with lines title 'Lowest' linestyle 2
 

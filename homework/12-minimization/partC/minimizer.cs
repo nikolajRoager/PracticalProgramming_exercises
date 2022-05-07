@@ -13,6 +13,12 @@ public static class minimizer
         return  qnewton(F,x0,acc,verbose,writer);
     }
 
+    //Mirror function to maximize instead
+    public static (vector,int) max_downhill_simplex(Func<vector,double>f, vector x0, double acc=1e-2, bool verbose=false,System.IO.StreamWriter writer =null,System.IO.StreamWriter writer_lowest =null)
+    {
+        Func<vector,double> F = (X)  => -f(X);
+        return  downhill_simplex(F,x0,acc,verbose,writer,writer_lowest );
+    }
 
     public static (vector,int) qnewton(Func<vector,double>f, vector x0, double acc=1e-2, bool verbose=false, System.IO.StreamWriter writer=null)
     {
@@ -269,5 +275,277 @@ public static class minimizer
         if (writer != null)
             writer.Close();
         return (x,step);
+    }
+
+    public static (vector,int) downhill_simplex(Func<vector,double>f, vector x0, double acc=1e-2, bool verbose=false, System.IO.StreamWriter writer=null,System.IO.StreamWriter writer_lowest =null)
+    {
+
+        //Read the number of parameters the function outputs, and the number of parameters in the input
+        int n = x0.size+1;
+        int max_steps=1024;//should never need that much
+
+        int step = -1;//Start at -1 so we really start at 0
+
+        vector[] vertices = new vector[n+1];//The simplex vertices + the centroid
+        double[] fs = new double[n];
+
+        for (int i = 0; i<n ; ++i)
+        {
+            vertices[i] = x0.copy();
+
+
+            if (i!=0)
+            {
+                vertices[i][i-1]+=1.0;//Start with an offset in each dimension, except for the first point
+            }
+            fs[i] = f(vertices[i]);
+
+        }
+
+
+        int lowest  = 0;//Which of the points are lowest and highest
+        int highest = 0;
+
+        //Check if any of the other actual points are higher/lower, and get the first centroid
+        vertices[n] = vertices[0]/(n-1);//The centroid is (vertices[0]+...vertices[n-1])/(n-1) over all points which are NOT the highest
+        for (int i = 1; i < n; ++i)
+        {
+            if (fs[i] < fs[lowest])
+            {
+                lowest = i;
+            }
+            if (fs[i] >= fs[highest])//The = here guarantees that the highest and lowest will not be the same, even if all points are identical
+            {
+                highest = i;
+            }
+            vertices[n] += vertices[i]/(n-1);//The centroid is (vertices[0]+...vertices[n-1])/(n-1) over all points which are NOT the highest
+        }
+
+        //Remove the highest point from the centroid sum
+        vertices[n] -= vertices[highest]/(n-1);
+
+
+        if (writer != null)
+        {
+            for (int i =0 ; i<n ; ++i)//Plot the triangle or whatever in a manner which gnuplot can understand
+            {
+                writer.WriteLine($"{vertices[i].asList()}\t{fs[i]}");
+            }
+            //For displaying this as a triangular grid with gnuplot
+            //Return to start
+            writer.WriteLine($"{vertices[0].asList()}\t{fs[0]}");
+            //And then make sure we are not at the highest point
+            writer.WriteLine($"{vertices[lowest].asList()}\t{fs[lowest]}");
+        }
+        if (writer_lowest != null)
+            writer_lowest.WriteLine($"{vertices[lowest].asList()}\t{fs[lowest]}");
+
+
+
+
+        bool do_end = false;
+        bool reduced = false;//Was the last step reduction
+        do
+        {//Each step
+            ++step;
+
+            if (verbose)
+            {
+                WriteLine($"Step {step}:");
+                for (int i =0 ; i<n ; ++i)//Plot the triangle or whatever in a manner which gnuplot can understand
+                {
+                    WriteLine($"{vertices[i].asList()}\t{fs[i]}"+(i == highest ?"\tHighest": ( (i==lowest) ? "\tLowest" : "")));
+                }
+            }
+
+            //Try reflection
+            vector new_vertex = vertices[n]-(vertices[highest]-vertices[n]);//This takes highest -> centroid - (vector from centroid to highest)
+            double new_vertex_f = f(new_vertex);
+
+            //Did it work
+            if (new_vertex_f<fs[highest])
+            {
+
+                //If reflection works perfectly, try expansion
+                if (new_vertex_f<fs[lowest])
+                {//Oh we are going the right way, try expansion
+                    lowest = highest;//Regardless of what happens, this is the lowest point now
+
+                    //Try reflection
+                    vector expanded= vertices[n]-2*(vertices[highest]-vertices[n]);//This takes highest -> centroid - 2*(vector from centroid to highest)
+                    double expanded_f = f(expanded);
+
+                    if (expanded_f<new_vertex_f)
+                    {//accept expansion
+                        new_vertex = expanded;
+                        new_vertex_f = expanded_f;
+                        if (verbose)
+                            WriteLine($"Accept Expansion");
+
+                    }
+                    else
+                        if (verbose)
+                                WriteLine($"Reject Expansion, Accept Reflection");
+
+
+                }
+            }
+            else//REJECT reflection
+            {//Try contraction
+
+                //Try contraction
+                new_vertex = vertices[n]+0.5*(vertices[highest]-vertices[n]);//This takes highest -> centroid + 1/2 (vector from centroid to highest)
+                new_vertex_f = f(new_vertex);
+
+                if (new_vertex_f <fs[highest])
+                {//accept expansion
+                    if (verbose)
+                        WriteLine($"Accept Contraction");
+
+                    if (new_vertex_f <fs[lowest])
+                    {
+                        lowest = highest;//If, by change this new point is actually the lowest, reset the lowest marker to that
+                    }
+
+                }
+                else
+                {
+                    if (verbose)
+                        WriteLine($"Do reduction");
+
+                    //Shrink everything towards the lowest point
+                    for (int i = 0; i < n; ++i)
+                    {
+                        if (i != lowest)//The = here guarantees that the highest and lowest will not be the same, even if all points are identical
+                        {
+                            //This becomes the midpoint between this and the lowest
+                            vertices[i] = 0.5*(vertices[i]+vertices[lowest]);
+
+
+
+                        }
+                    }
+
+                    //also reset the centroid and the highest and lowest point, using a full recalculating as EVERYTHING changed
+                    lowest  = 0;
+                    highest = 0;
+
+                    //Check if any of the other actual points are higher/lower, and get the first centroid
+                    vertices[n] = vertices[0]/(n-1);//The centroid is (vertices[0]+...vertices[n-1])/(n-1) over all points which are NOT the highest
+
+                    if ((vertices[0]-vertices[n-1]).norm()<acc)
+                    {
+                        if (verbose)
+                            WriteLine($"Distance to neighbour within limit");
+                        do_end=true;
+                    }
+
+                    for (int i = 1; i < n; ++i)
+                    {
+                        if (fs[i] < fs[lowest])
+                        {
+                            lowest = i;
+                        }
+                        if (fs[i] >= fs[highest])//The = here guarantees that the highest and lowest will not be the same, even if all points are identical
+                        {
+                            highest = i;
+                        }
+                        vertices[n] += vertices[i]/(n-1);//The centroid is (vertices[0]+...vertices[n-1])/(n-1) over all points which are NOT the highest
+
+                        if ((vertices[i]-vertices[i-1]).norm()<acc)
+                        {
+                            if (verbose)
+                                WriteLine($"Distance to neighbour within limit");
+                            do_end=true;
+                        }
+
+                    }
+                    //Remove the highest point from the centroid sum
+                    vertices[n] -= vertices[highest]/(n-1);
+
+
+                    reduced = true;
+
+
+
+                }
+
+
+
+
+
+
+
+            }
+
+            if (!do_end && !reduced)//If we rand reduction, we already reset the lowest and highest, if we should end, we did not find a new vertex
+            {//Reset the centroid and highest and lowest each step
+
+                //If the new point is not the the lowest, the lowest is guaranteed to be unchanged
+
+                vertices[highest] = new_vertex;
+                //Reset highest and centroid
+                fs[highest] =  new_vertex_f;
+
+                //The highest may have changed, our first guess is that the new_vertex poitn is still the highest
+                int new_vertex_point = highest;
+                for (int i = 0; i < n; ++i)
+                {
+                    if (fs[i] >= fs[highest])//The = here guarantees that the highest and lowest will not be the same, even if all points are identical
+                    {
+                        highest = i;
+                    }
+                }
+
+                if (new_vertex_point != highest)//Only change the centroid if the new point we added is not still the highest
+                {
+                    //Remove the point which now is the highest from the centroid sum
+                    vertices[n] -= vertices[highest]/(n-1);
+                    vertices[n] += vertices[new_vertex_point]/(n-1);
+                }
+
+                //Check if the point we just moved is too close to one neighbor (it is the only distance which changed, and it always has the same distance to both neighbour )
+
+                int neighbour =(new_vertex_point == 0) ? n-1 : new_vertex_point -1;
+
+
+                if ((vertices[new_vertex_point]-vertices[neighbour ]).norm()<acc)
+                {
+                    if (verbose)
+                        WriteLine($"Distance to neighbour within limit");
+                    do_end=true;
+                }
+            }
+
+
+
+
+            if (writer != null)
+            {
+                for (int i =0 ; i<n ; ++i)//Plot the triangle or whatever in a manner which pyxplot can understand
+                {
+                    writer.WriteLine($"{vertices[i].asList()}\t{fs[i]}");
+                }
+                writer.WriteLine($"{vertices[0].asList()}\t{fs[0]}");//Close the triangle
+                writer.WriteLine($"{vertices[lowest].asList()}\t{fs[lowest]}");//Then move to a point which will not be deleted next step, this will display a nice triangle grid
+            }
+
+            if (writer_lowest != null)
+                writer_lowest.WriteLine($"{vertices[lowest].asList()}\t{fs[lowest]}");
+
+
+            if (step>=max_steps)//I am not sure how you would have > max steps
+            {
+                if (verbose)
+                    WriteLine("ALGORITHM FAILED: too many steps");
+                do_end=true;
+            }
+
+        }
+        while (!do_end);
+
+        if (writer != null)
+            writer.Close();
+        return (vertices[lowest],step);
     }
 }

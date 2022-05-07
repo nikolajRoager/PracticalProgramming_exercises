@@ -5,6 +5,7 @@ RUN = mono
 
 all : outA.txt
 ;cat outA.txt
+;gnuplot plot.gpi
 
 outA.txt rosenbrock.tsv himmelblau.tsv : partA.exe
 ;$(RUN) $< > outA.txt

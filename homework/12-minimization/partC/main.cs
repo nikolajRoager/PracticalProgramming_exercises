@@ -25,6 +25,8 @@ public static class main
         WriteLine($"----------------------------------------------");
 
         bool verbose = false;
+        bool PASS = true;//Optimistic today are we?
+
 
         foreach(string s in args)
         {
@@ -35,7 +37,7 @@ public static class main
         WriteLine($"Demonstration one, find max of f(x)=exp(-(x-2)^2) (true solution x=2");
         Func<vector,double> f0 = (X)  => Exp( -(X[0]-2)*(X[0]-2));
         WriteLine($"Starting at x0 = (0.0) with precision 10^-5. Now Running ...");
-        (vector root0, int steps0) = max_qnewton(f0,new vector(0.0),1e-5,verbose );
+        (vector root0, int steps0) = max_downhill_simplex(f0,new vector(0.0),1e-5,verbose );
 
         WriteLine("");
         WriteLine(root0.getString($"In {steps0} steps: Got predicted max at x="));
@@ -47,19 +49,21 @@ public static class main
         else
         {
             WriteLine("FAIL this is not within 10^-5 of 2.0");
+            PASS=false;
         }
 
+        WriteLine($"----------------------------------------------");
 
-        WriteLine($"\nDemonstration Rosenbrock, find minimum of f(x,y)=((1-x)^2+100*(y-x^2)^2) (minimum is at 1,1)");
+        WriteLine($"Demonstration Rosenbrock, find minimum of f(x,y)=((1-x)^2+100*(y-x^2)^2) (minimum is at 1,1)");
         Func<vector,double> f1 = (X)  => ((1-X[0])*(1-X[0])+100*(X[1]-X[0]*X[0])*(X[1]-X[0]*X[0]) ) ;
         WriteLine($"Starting at x0 = (-1,2) with precision 10^-5. Now Running ...");
-        (vector root1, int steps1) = qnewton(f1,new vector(-1,2),1e-5,verbose, new System.IO.StreamWriter("rosenbrock.tsv"));
+        (vector root1, int steps1) = downhill_simplex(f1,new vector(-1,2),1e-5,verbose, new System.IO.StreamWriter("rosenbrock_mesh.tsv"),new System.IO.StreamWriter("rosenbrock_best.tsv"));
 
         WriteLine("");
         WriteLine(root1.getString("Got predicted root x="));
 
         WriteLine("");
-        WriteLine(root1.getString($"In {steps1} steps: Has f(x)="));
+        WriteLine($"In {steps1} steps: Has f(x)={f1(root1)}");
         WriteLine("");
         if (root1.approx(new vector(1.0,1.0),1e-5,1e-5))
         {
@@ -68,20 +72,22 @@ public static class main
         else
         {
             WriteLine("FAIL this is not within 10^-5 of (1,1)");
+            PASS=false;
         }
 
 
 
-        WriteLine($"\nDemonstration Himmelblau, find minimum of f(x,y)=(x^2+y-11)^2+(x+y^2-7)^2\nminima at: (3.0,2.0),(-2.805118, 3.131312),(-3.779310, -3.283186) and (3.584428, -1.848126)");
+        WriteLine($"----------------------------------------------");
+        WriteLine($"Demonstration Himmelblau, find minimum of f(x,y)=(x^2+y-11)^2+(x+y^2-7)^2\nminima at: (3.0,2.0),(-2.805118, 3.131312),(-3.779310, -3.283186) and (3.584428, -1.848126)");
         Func<vector,double> f2 = (X)  => ((X[0]*X[0]+X[1]-11)*(X[0]*X[0]+X[1]-11)+(X[0]+X[1]*X[1]-7)*(X[0]+X[1]*X[1]-7));
         WriteLine($"Starting at x0 = (0,0) with precision 10^-5. Now Running ...");
-        (vector root2, int steps2) = qnewton(f2,new vector(0,0),1e-5,verbose , new System.IO.StreamWriter("himmelblau.tsv"));
+        (vector root2, int steps2) = downhill_simplex(f2,new vector(0,0),1e-5,verbose , new System.IO.StreamWriter("himmelblau_mesh.tsv"), new System.IO.StreamWriter("himmelblau_best.tsv"));
 
         WriteLine("");
         WriteLine(root2.getString("Got predicted root x="));
 
         WriteLine("");
-        WriteLine(root2.getString($"In {steps2} steps: Has f(x)="));
+        WriteLine($"In {steps2} steps: Has f(x)={f2(root2)}");
         WriteLine("");
         if ( approx(f2(root2),0.0,1e-5,1e-5))
         {
@@ -89,8 +95,14 @@ public static class main
         }
         else
         {
+            PASS=false;
             WriteLine("FAIL the function is not within 10^-5 of 0, here; which is the known minimum");
         }
+        WriteLine($"----------------------------------------------");
+        if (PASS)
+            WriteLine("ALL TESTS PASSED");
+        else
+            WriteLine("SOME TESTS FAILED");
 
         return 0;
     }

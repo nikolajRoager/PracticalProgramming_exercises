@@ -3,14 +3,15 @@
 CSC = mcs
 RUN = mono
 
-all : outA.txt
-;cat outA.txt
+all : outC.txt
+;cat outC.txt
+;gnuplot plot.gpi
 
-outA.txt rosenbrock.tsv himmelblau.tsv : partA.exe
-;$(RUN) $< > outA.txt
+outC.txt rosenbrock_best.tsv himmelblau_best.tsv : partC.exe
+;$(RUN) $< > outC.txt
 
 
-partA.exe:main.cs minimizer.dll matrix.dll vector.dll
+partC.exe:main.cs minimizer.dll matrix.dll vector.dll
 ;$(CSC) -target:exe -out:$@ -reference:vector.dll -reference:matrix.dll  -reference:minimizer.dll $<
 
 minimizer.dll : minimizer.cs matrix.dll vector.dll
