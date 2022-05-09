@@ -1,0 +1,4 @@
+--------------------------------------------------------
+Demonstrating Neural Network approximations of functiosn
+--------------------------------------------------------
+Having had optimized such that deviation 88.5912920429475 ->  88.5912920429475 in 1024 steps

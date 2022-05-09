@@ -1,0 +1,16 @@
+-------------------------------------------------
+Demonstrating quasi randommonte carlo integration
+-------------------------------------------------
+NOTE, plain Monte Carlo is random, and give DIFFERENT results each run (different seeds). It will occasionally fail to get within error of te true result, this is to be expected, more often than not it should work
+-----------------------------------------------------
+quasi integral of x*y from 0,0 to 1,1 =0.249758665619106±0.000451950401633705  PASS
+for comparison, plain integral of x*y from 0,0 to 1,1 =0.249249152864465±0.0021834953649865  PASS
+-----------------------------------------------------
+-----------------------------------------------------
+quasi integral of f(x,y)=1 if x^2+y^2<0.8, otherwise 0  from 0,0 to 1,1 =0.503±0.000900000000000012  PASS
+for comparison, plain integral of f(x,y)=1 if x^2+y^2<0.8, otherwise 0  from 0,0 to 1,1 =0.4983±0.00499997109991648  PASS
+-----------------------------------------------------
+-----------------------------------------------------
+quasi integral of (1-Cos(X[0])*Cos(X[1])*Cos(X[2]))/(PI*PI*PI) from 0,0,0 to PI PI PI =1.39064511682198±0.00144687395751175  PASS
+plain integral of (1-Cos(X[0])*Cos(X[1])*Cos(X[2]))/(PI*PI*PI) from 0,0,0 to PI PI PI =1.37990663766378±0.00481581812989078  PASS
+-----------------------------------------------------

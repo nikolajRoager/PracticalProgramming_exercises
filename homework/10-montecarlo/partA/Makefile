@@ -4,12 +4,11 @@
 CSC = mcs
 RUN = mono
 
-all : logA
-;cat logA
+all : outA.txt
+;cat outA.txt
 
-.PHONY: force
-logA : partA.exe force
-;$(RUN) $< 7 1> logA
+outA.txt : partA.exe
+;$(RUN) $< 7 1> outA.txt
 
 
 partA.exe:main.cs mc.dll
@@ -25,4 +24,4 @@ doublelist.dll : doublelist.cs
 .PHONY: clean
 
 clean:
-;rm -f *.dll *.exe log* *.png
+;rm -f *.dll *.exe log* *.png *.txt

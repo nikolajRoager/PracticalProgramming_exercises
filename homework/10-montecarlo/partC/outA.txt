@@ -1,0 +1,7 @@
+-------------------------------------------
+Demonstrating plain monte carlo integration
+-------------------------------------------
+NOTE, Monte Carlo is random, and give DIFFERENT results each run (different seeds). It will occasionally fail to get within error of te true result, this is to be expected, more often than not it should work
+-----------------------------------------------------
+Stratified integral of f(x,y)=1 if x^2+y^2<0^2.8, otherwise 0  from 0,0 to 1,1 is 0.502793264621613±0.000204192692217101  PASS
+-----------------------------------------------------

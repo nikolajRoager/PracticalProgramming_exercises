@@ -1,0 +1,9 @@
+set terminal png
+set output 'points.png'
+set xlabel 'x'
+set ylabel 'y'
+set size ratio 1
+set key below
+plot [0:1] [0:1] 'points.tsv' index 0 using 1:2 with points  pointtype 17 pointsize 0.2 title 'Points',\
+sqrt(max(0.8*0.8-x*x,0.0)) with lines title '$x^2+y^2=0.8^2$'
+

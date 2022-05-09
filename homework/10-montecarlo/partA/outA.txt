@@ -1,0 +1,14 @@
+-------------------------------------------
+Demonstrating plain monte carlo integration
+-------------------------------------------
+NOTE, Monte Carlo is random, and give DIFFERENT results each run (different seeds). It will occasionally fail to get within error of te true result, this is to be expected, more often than not it should work
+-----------------------------------------------------
+plain integral of x*y from 0,0 to 1,1 is 0.249568022173639±0.00220925988897108  PASS
+-----------------------------------------------------
+-----------------------------------------------------
+plain integral of f(x,y)=1 if x^2+y^2<0^2.8, otherwise 0  from 0,0 to 1,1 is 0.5011±0.00499998789998536  PASS
+-----------------------------------------------------
+-----------------------------------------------------
+plain integral of (1-Cos(X[0])*Cos(X[1])*Cos(X[2]))/(PI*PI*PI) from 0,0,0 to PI PI PI =1.38262737182514±0.0159287071240475  PASS
+AGAIN, plain monte carlo is random and may randomly fail a few times
+In my experience it works MORE OFTEN THAN NOT

@@ -71,7 +71,7 @@ public static class montecarlo
         {
             //Get a truly random points, get two different by using two different bases, the integer is translated into different primes
             doublelist Quasi = halton (i+offset,dim);
-            doublelist Quasi1 = halton (i+offset,dim,4);//Uses prime 4 and 5 (i,e, 11 and 13), rather than 0 and 1 (2 and 3)
+            doublelist Quasi1 = halton (i+offset,dim,8);//Use different primes to get different patterns
             for (int k=0;k<dim;k++)
             {
                 x [k]=a[k]+Quasi [k]*(b[k]-a[k]);

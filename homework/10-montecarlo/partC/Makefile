@@ -4,14 +4,17 @@
 CSC = mcs
 RUN = mono
 
-all : outB.txt
-;cat outB.txt
+all : outA.txt points.png
+;cat outA.txt
 
-outB.txt : partB.exe
-;$(RUN) $< 7 1> outB.txt
+points.png : points.tsv
+;pyxplot plot.gpi
+
+outA.txt points.tsv: partA.exe
+;$(RUN) $< 7 1> outA.txt 2> points.tsv
 
 
-partB.exe:main.cs mc.dll
+partA.exe:main.cs mc.dll
 ;$(CSC) -target:exe -out:$@ -reference:doublelist.dll  -reference:mc.dll $<
 
 mc.dll : mc.cs doublelist.dll
