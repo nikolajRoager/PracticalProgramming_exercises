@@ -12,66 +12,82 @@ public static class main
         System.Func<double,doublelist,doublelist> ODEtribody = delegate(double x,doublelist data)
         {
 
-            doublelist Out = new doublelist(18);
+            doublelist Out = new doublelist(12);
 
             double m0=1;
-            double m1=10;
-            double m2=0;
+            double m1=1;
+            double m2=1;
 
             double G=1;
 
 
 
             //Upload velocity -> derivative of position at once
-            Out[0]  = data[3];
-            Out[1]  = data[4];
-            Out[2]  = data[5];
-            Out[6]  = data[9];
-            Out[7]  = data[10];
-            Out[8]  = data[11];
-            Out[12] = data[15];
-            Out[13] = data[16];
-            Out[14] = data[17];
+            Out[0]  = data[2];
+            Out[1]  = data[3];
 
-            vec pos0 = new vec(data[0],data[1],data[2]);
-            vec pos1 = new vec(data[6],data[7],data[8]);
-            vec pos2 = new vec(data[12],data[13],data[14]);
+            Out[4]  = data[6];
+            Out[5]  = data[7];
+
+            Out[8]  = data[10];
+            Out[9] = data[11];
+
+            vec pos0 = new vec(data[0],data[1]);
+            vec pos1 = new vec(data[4],data[5]);
+            vec pos2 = new vec(data[8],data[9]);
 
             vec Acc0 = (G*m1/dot(pos0-pos1,pos0-pos1)*(pos1-pos0)/System.Math.Sqrt(dot(pos0-pos1,pos0-pos1))+G*m2/dot(pos0-pos2,pos0-pos2)*(pos2-pos0)/System.Math.Sqrt(dot(pos0-pos2,pos0-pos2)) );
 
-            Out[3] = Acc0.x;
-            Out[4] = Acc0.y;
-            Out[5] = Acc0.z;
-            Out[9] =0;
-            Out[10]=0;
-            Out[11]=0;
-            Out[15]=0;
-            Out[16]=0;
-            Out[17]=0;
+            vec Acc1 = ( -G*m0/dot(pos0-pos1,pos0-pos1)*(pos1-pos0)/System.Math.Sqrt(dot(pos0-pos1,pos0-pos1))+G*m2/dot(pos1-pos2,pos1-pos2)*(pos2-pos1)/System.Math.Sqrt(dot(pos1-pos2,pos1-pos2)) );
+
+            vec Acc2 = (G*m1/dot(pos2-pos1,pos2-pos1)*(pos1-pos2)/System.Math.Sqrt(dot(pos2-pos1,pos2-pos1))-G*m2/dot(pos0-pos2,pos0-pos2)*(pos2-pos0)/System.Math.Sqrt(dot(pos0-pos2,pos0-pos2)) );
+
+
+            Out[2] = Acc0.x;
+            Out[3] = Acc0.y;
+
+            Out[6] = Acc1.x;
+            Out[7]= Acc1.y;
+
+            Out[10]= Acc2.x;
+            Out[11]= Acc2.y;
 
             return Out;
         };
 
 
-        doublelist planets0 = new doublelist(18);
-        planets0[0] = -5;
-        planets0[1] = 0;
-        planets0[2] = 0;
-        planets0[3] = 0;
-        planets0[4] = 1.0;
-        planets0[5] = 0;
-        planets0[6] = 0;
-        planets0[7] = 0;
+
+
+
+        doublelist planets0 = new doublelist(12);
+        //Planet 0
+        //position
+        planets0[0] = 0.97000436;
+        planets0[1] = -0.24308753;
+
+        //velocity
+        planets0[2] = 0.5*0.93240737;
+        planets0[3] = 0.5*0.86473146;
+
+        //Planet 1
+        //position
+        planets0[4] = -0.97000436;
+        planets0[5] = 0.24308753;
+
+
+        //velocity
+        planets0[6] = 0.5*0.93240737;
+        planets0[7] = 0.5*0.86473146;
+
+        //Planet 2
+        //position
         planets0[8] = 0;
         planets0[9] = 0;
-        planets0[10] = 0;
-        planets0[11] = 0;
-        planets0[12] = 0;
-        planets0[13] = 0;
-        planets0[14] = 0;
-        planets0[15] = 0;
-        planets0[16] = 0;
-        planets0[17] = 0;
+
+        planets0[10] = -0.93240737;
+        planets0[11] = -0.86473146;
+
+
 
         genlist<doublelist> planets = new genlist<doublelist>();
         doublelist t_list = new doublelist();

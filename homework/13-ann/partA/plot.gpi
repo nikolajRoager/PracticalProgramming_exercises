@@ -2,7 +2,7 @@ set terminal png
 set output 'outA.png'
 set xlabel 'x'
 set ylabel 'y'
-plot 'outA.tsv' index 0 using 1:2 with lines title '32 Neurons' ,\
-'outA.tsv' index 0 using 1:3 with lines  title 'expected',\
-'outA.tsv' index 0 using 1:4 with lines  title 'start  guess'
+set key below
+plot 'outA.tsv' index 1 using 1:2 with lines  title '8 neurons',\
+'outA.tsv' index 0 using 1:2 with points pointtype 17 pointsize 0.4 title 'training data'
 

@@ -4,4 +4,7 @@ set title "Orbits"
 set xlabel "$x$"
 set ylabel "$y$ "
 set key out
-plot  "threebody.tsv" using 2:3 with line title "planet 0"
+set grid
+plot [-1.5:1.5][-1.5:1.5] "threebody.tsv" using 2:3 with line title "planet 0",\
+"threebody.tsv" using 6:7 with line title "planet 1",\
+"threebody.tsv" using 10:11 with line title "planet 2"

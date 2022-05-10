@@ -7,14 +7,14 @@ using static vector;
 public static class minimizer
 {
     //Mirror function to maximize instead
-    public static (vector,int) max_qnewton(Func<vector,double>f, vector x0, double acc=1e-2, bool verbose=false,System.IO.StreamWriter writer =null)
+    public static (vector,int) max_qnewton(Func<vector,double>f, vector x0, double acc=1e-3, bool verbose=false,System.IO.StreamWriter writer =null)
     {
         Func<vector,double> F = (X)  => -f(X);
         return  qnewton(F,x0,acc,verbose,writer);
     }
 
     //Mirror function to maximize instead
-    public static (vector,int) max_downhill_simplex(Func<vector,double>f, vector x0, double acc=1e-2, bool verbose=false,System.IO.StreamWriter writer =null,System.IO.StreamWriter writer_lowest =null)
+    public static (vector,int) max_downhill_simplex(Func<vector,double>f, vector x0, double acc=1e-3, bool verbose=false,System.IO.StreamWriter writer =null,System.IO.StreamWriter writer_lowest =null)
     {
         Func<vector,double> F = (X)  => -f(X);
         return  downhill_simplex(F,x0,acc,verbose,writer,writer_lowest );
@@ -548,4 +548,7 @@ public static class minimizer
             writer.Close();
         return (vertices[lowest],step);
     }
+
+
+
 }
