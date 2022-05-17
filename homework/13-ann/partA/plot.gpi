@@ -4,5 +4,6 @@ set xlabel 'x'
 set ylabel 'y'
 set key below
 plot 'outA.tsv' index 1 using 1:2 with lines  title '8 neurons',\
+'outA.tsv' index 1 using 1:3 with lines  title '8 neurons (untrained)',\
 'outA.tsv' index 0 using 1:2 with points pointtype 17 pointsize 0.4 title 'training data'
 

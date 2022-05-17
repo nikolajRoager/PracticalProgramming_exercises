@@ -37,9 +37,10 @@ public static class main{
         //Apparently this should allow pyxplot to put multiple data in the same file
         Error.WriteLine("");
         Error.WriteLine("");
+        neural_network untrained = new neural_network(8,activation,-1,1);
 
         for (double x = -1; x <= 1; x+=0.01)
-            Error.WriteLine($"{x}\t{trained.response(x)}");//We make sure to be offset from our training data, to make sure our network has not just learned to memorize the data
+            Error.WriteLine($"{x}\t{trained.response(x)}\t{untrained.response(x)}");//We make sure to be offset from our training data, to make sure our network has not just learned to memorize the data
         return 0;
     }
 }

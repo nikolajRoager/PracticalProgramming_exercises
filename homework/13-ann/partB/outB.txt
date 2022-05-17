@@ -1,4 +1,4 @@
 --------------------------------------------------------
 Demonstrating Neural Network approximations of functiosn
 --------------------------------------------------------
-Having optimized such that deviation 1.47397886547226 ->  7.52434285185906E-05 in 249 steps
+Having optimized such that deviation 1.48237441195041 ->  7.36628499532538E-06 in 1024 steps
