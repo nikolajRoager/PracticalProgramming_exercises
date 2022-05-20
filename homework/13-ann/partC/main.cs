@@ -16,7 +16,7 @@ public static class main{
 
         //The (ordinary) differential equation we want to solve, I think a damped harmonic oscillator
         //I imagine this is a = ddyddt, v = dxdt and m a = -alpha v-k y*y, so
-        Func<double,double,double,double,double> phi= (ddyddt,dydt,y,t)  => -ddtddt-dydt-y*y;
+        Func<double,double,double,double,double> phi= (ddyddt,dydt,y,t)  => -ddtddt-dydt-;
         //Gaussian activation function
         Func<double,double> activation = (X)  => Exp(-X*X);
         //Func<double,double> d_activation = (X)  => -2*X*Exp(-X*X);
