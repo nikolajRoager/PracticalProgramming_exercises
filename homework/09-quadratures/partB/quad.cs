@@ -5,13 +5,13 @@ using static System.Math;
 public static class quad
 {
 
-    public static (double,int) integrateCC(Func <double,double> F, double x_min, double x_max, double abs_acc=0.001, double rel_acc=0.001, double point_1=double.NaN, double point_2=double.NaN)
+    public static (double,double,int) integrateCC(Func <double,double> F, double x_min, double x_max, double abs_acc=0.001, double rel_acc=0.001, double point_1=double.NaN, double point_2=double.NaN)
     {
         Func <double,double> FF = theta => F((x_min+x_max)/2.0+(x_max-x_min)/2.0*Cos(theta) )*Sin(theta)*(x_max-x_min)/2.0;
         return integrate(FF,0,PI,abs_acc,rel_acc);
     }
 
-    public static (double,int) integrate(Func <double,double> F, double x_min, double x_max, double abs_acc=0.001, double rel_acc=0.001, double point_1=double.NaN, double point_2=double.NaN)
+    public static (double,double,int) integrate(Func <double,double> F, double x_min, double x_max, double abs_acc=0.001, double rel_acc=0.001, double point_1=double.NaN, double point_2=double.NaN)
 
     {
         //Step size
@@ -37,7 +37,7 @@ public static class quad
         if (err <= Max(abs_acc,rel_acc*Abs(Q)))
         {
 
-            return (Q,1);
+            return (Q,err,1);
         }
         //Otherwise integrate the two half-intervals, notably the old 1/6 and 2/6 way points are now the new 2/6 and 4/6 points for the first halves, and the old 4/6 and 5/6 points are now the new 2/6 and 4/6 points:
 
@@ -48,17 +48,20 @@ public static class quad
         {
             double Q0, Q1;
             int itr0, itr1;
+            double err0, err1;
 
 //            System.Console.WriteLine($" Reject");
 //            System.Console.WriteLine($"Between {x_min} and {x_max}");
 //            System.Console.WriteLine($"Points having {point_0} {point_1} {point_2} {point_3}");
 //            System.Console.WriteLine($"Got do {Q} and {q}, so error {err} versus tolerance {Max(abs_acc,rel_acc*Abs(Q))}");
             //Scaling absolute error by 1/sqrt(2) BREAKS EVERYTHING, the result is a truly infinite loop where the accuracy criterion races to 0 faster than the error, resulting in a stack-overflow
-            (Q0,itr0) = integrate(F,x_min,(x_max+x_min)/2,abs_acc/Sqrt(2),rel_acc,point_0,point_1);
-            (Q1,itr1) = integrate(F,(x_min+x_max)/2,x_max,abs_acc/Sqrt(2),rel_acc,point_2,point_3);
+            (Q0,err0,itr0) = integrate(F,x_min,(x_max+x_min)/2,abs_acc/Sqrt(2),rel_acc,point_0,point_1);
+            (Q1,err1,itr1) = integrate(F,(x_min+x_max)/2,x_max,abs_acc/Sqrt(2),rel_acc,point_2,point_3);
 
-            return (Q0+Q1,itr0+itr1);
+            return (Q0+Q1,Sqrt(err0*err0+err1*err1),itr0+itr1);
         }
     }
 
 }
+
+

@@ -1,0 +1,31 @@
+set terminal png
+set output 'M_E.png'
+set xlabel '$E$'
+set ylabel 'M'
+plot [][-50:50] 'wavefunction.tsv' index 0 using 1:2 with lines  notitle
+set output 'wavefunction.png'
+set xlabel '$r$'
+set ylabel ''
+set key below
+plot 'wavefunction.tsv' index 1 using 1:2 with lines  title '$f(r)$',\
+'wavefunction.tsv' index 1 using 1:4 with lines linetype 2 title 'true $f(r)$'
+set output 'ConvergenceRmin.png'
+set xlabel '$r_min$'
+set ylabel '$E_0$'
+set key below
+plot 'wavefunction.tsv' index 2 using 1:2 with lines  notitle
+set output 'ConvergenceRmax.png'
+set xlabel '$r_{max}$'
+set ylabel '$E_0$'
+set key below
+plot 'wavefunction.tsv' index 3 using 1:2 with lines  notitle
+set output 'ConvergenceRelErr.png'
+set xlabel '$RelErr$'
+set ylabel '$E_0$'
+set key below
+plot 'wavefunction.tsv' index 4 using 1:2 with lines  notitle
+set output 'ConvergenceAbsErr.png'
+set xlabel '$AbsErr$'
+set ylabel '$E_0$'
+set key below
+plot 'wavefunction.tsv' index 5 using 1:2 with lines  notitle

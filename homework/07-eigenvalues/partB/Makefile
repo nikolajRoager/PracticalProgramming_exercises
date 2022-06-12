@@ -4,17 +4,17 @@ DATADIR = DATA
 CSC = mcs
 RUN = mono
 
-all : logB energies.png
-	cat logB
+all : outB.txt energies.png
+	cat outB.txt
 
 #A single demonstration, just to see that it works
-$(DATADIR)/wavefunction_80_500.tsv logB: B_hydrogen.exe
-	echo 'Demonstration width range 80 a and N=500' > logB
-	echo "R_max   N     E[0]     E[1]   E[2]   E[3]   E[4]" >> logB
-	$(RUN) $< 80 500 2>> logB 1> $(DATADIR)/wavefunction_80_500.tsv
+$(DATADIR)/wavefunction_80_500.tsv outB.txt: B_hydrogen.exe
+	echo 'Demonstration width range 80 a and N=500' > outB.txt
+	echo "R_max   N     E[0]     E[1]   E[2]   E[3]   E[4]" >> outB.txt
+	$(RUN) $< 80 500 2>> outB.txt 1> $(DATADIR)/wavefunction_80_500.tsv
 
 $(DATADIR)/wavefunction_analytic.tsv: analytical_wavefunctions.exe
-	$(RUN) $< 80 500 2>> logB 1> $(DATADIR)/wavefunction_analytical.tsv
+	$(RUN) $< 80 500 2>> outB.txt 1> $(DATADIR)/wavefunction_analytical.tsv
 
 
 energies.png : $(DATADIR)/energies.tsv plot.gpi $(DATADIR)/wavefunction_80_500.tsv $(DATADIR)/wavefunction_analytic.tsv

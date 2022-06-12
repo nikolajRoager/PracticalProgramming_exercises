@@ -1,6 +1,6 @@
-integrate(1/x^3,1,infinity)=0.5±0 at 1 calls; should be 0.5
-integrate(1/x^4,1,infinity)=0.333333333333333±7.49277306866651E-08 at 128 calls; should be 0.333333333333333
-integrate(exp(-x*x),-infinity,infinity)=1.77245384627413±4.59106460063531E-08 at 441 calls; should be 1.77245385090552
-integrate(exp(-x*x),-infinity,0)=0.886226922260328±4.81866731391018E-08 at 307 calls; should be 0.886226925452758
+integrate(1/x^3,1,infinity)=0.5±0 at 1 calls; PASS
+integrate(1/x^4,1,infinity)=0.333333333333333±7.49277306866651E-08 at 128 calls; PASS
+integrate(exp(-x*x),-infinity,0)=1.77245384627413±4.59106460063531E-08 at 441 calls, should be 0.886226925452758; FAIL
+integrate(exp(-x*x),-infinity,0)=0.886226922260328±4.81866731391018E-08 at 307 calls, should be 0.886226925452758; PASS
 scipy 1/x^4 ->  (0.33333333333333337, 3.700743415417189e-15)  i= 15
 scipy Exp(-x^2) ->  (1.7724538509055159, 1.4202636780944923e-08)  i= 270

@@ -1,0 +1,16 @@
+------------------------------
+Demonstrating Shooting method
+ODE based  boundary-problems
+----------------------------
+Just for fun, plotting M for E from -1.0 to 0.0
+-----------------------------------------------
+Starting at E = (-1.0) with precision 10^-6, absErr=0.01, relErr=0.01, r_min=0.003, r_max=10 Now Running ...
+
+In 9 steps Got predicted root E0=-0.500000215252192
+PASS this is within 10^-6 of -0.5 (any remaining error is likely due to the rootfinder, not the ODE convergence)
+-----------------------------------------------
+Testing convergence
+Only at r_min <= 0.00399999999999997 do we get the right energy (With absErr=0.01, relErr=0.01,  r_max=10) 
+Only at r_max >= 10 do we get the right energy (With absErr=0.01, relErr=0.01, r_min=0.003 ) 
+Only at relErr <= 0.01 do we get the right energy (With absErr=0.01,  r_min=0.003, r_max=10) 
+Only at absErr <= 0.01 do we get the right energy (With  relErr=0.01, r_min=0.003, r_max=10) 

@@ -7,20 +7,20 @@ Plot = gnuplot
 .RECIPEPREFIX := ;
 
 
-#I want make to update if i change the makefie, so I make this dependent on the makefile
 all : gamma.png
 
 #Also plots lngamma.png
 gamma.png : gamma_approx.tsv lngamma_approx.tsv plot.gpi
 ;gnuplot plot.gpi
 
-%.tsv : %.exe
+
+gamma_approx.tsv : gamma_approx.exe
 ;$(Runtime) $< > $@
 
-%.exe: %.cs Makefile
+gamma_approx.exe: gamma_approx.cs
 ;$(Compiler) $<
 
 .PHONY : clean
-clean:# a phoney target, can be used to run any commands
+clean:
 ;rm -f gamma_approx.tsv [Oo]ut* *.exe *.png [Ll]og*
 # remove secondary files

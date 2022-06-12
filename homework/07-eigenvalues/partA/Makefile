@@ -4,12 +4,12 @@
 CSC = mcs
 RUN = mono
 
-all : logA
-;cat logA
+all : outA.txt
+;cat outA.txt
 
 #This phony target forces part A to re-run every time, this is good since the RNG changes every time, and I might WANT to try different random matrices
 .PHONY: .FORCE
-logA: A_jacobi.exe  .FORCE
+outA.txt: A_jacobi.exe  .FORCE
 ;$(RUN) $< 3 > $@
 
 

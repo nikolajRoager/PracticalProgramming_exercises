@@ -7,6 +7,8 @@ I use my generic list class from one of the previous homeworks to store the outp
 
 PART A
 --------
+Output: The only output are the images pendulum.png  sin.png showing my ODE results.
+
 In part A I (1) implemented the Dormand Prince 5-4 embedded stepper, and (2) an adaptive stepsize driver.
 
 As an example, I have solved (3) a simple problem, in this case y''=-y (should be sin(x)) (4) the requested problem, pendulum with friction. The demonstration that this is working are the two figures with the sine-curve and the recreated graph of the pendulum problem.
@@ -21,8 +23,13 @@ Do note that I implement a max step size; this is merely done for graphical purp
 
 PART B
 --------
+Output: Again, the only output are the images pendulum.png  sin.png showing my ODE results. They are identical to what I got in A, though the underlying method for calculating them is slightly differently
+
+
 In part B I store all the points each step (actually, I did that in A as well) and I check the error on a per-point basis (Actually that was the way I originally made it) I recreate the same plots to demonstrate that this works as well
 
 PART C
 ------
+Output: Again, the only output is an image showing the path the planets take. I did not see any reason to output any text files.
+
 In part C I reproduce the stable gravitational system, do note I use 2D vectors, rather than 3D, as it all happens in a plane. I use the conditions in the paper and get the same infinity-symbol loop as they got.

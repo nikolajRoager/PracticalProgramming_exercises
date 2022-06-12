@@ -24,6 +24,7 @@ class main
             list.push(numbers);
         }
 
+        WriteLine($"List before remove");
         for(int i=0;i<list.size;i++)
         {
             var numbers = list.data[i];

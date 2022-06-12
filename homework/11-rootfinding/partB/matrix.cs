@@ -1,5 +1,6 @@
 using System;
 using static System.Math;
+//using static System.Console;
 
 public class matrix
 {
@@ -18,7 +19,6 @@ public class matrix
             for (int j = 0; j < width; ++j)
                 this[i,j]= (i==j) ? 1 : 0;
     }
-
 
     public matrix(int n)
     {
@@ -420,15 +420,6 @@ public class matrix
                 Out[i,j]=a[i,j]*x;
         return Out;
     }
-    //Matrix scaling
-    public static matrix operator/(matrix a, double x)
-    {
-        matrix Out = new matrix(a.height,a.width);
-        for(int i=0;i<a.height;i++)
-            for(int j=0;j<a.width;j++)
-                Out[i,j]=a[i,j]/x;
-        return Out;
-    }
 
     //Is this matrix evil (NaN or infinity)
     public bool isEvil()
@@ -462,25 +453,6 @@ public class matrix
 
         return Out;
     }
-
-    //Outer vector product, creates a matrix
-    public static matrix outer_product (vector a, vector b)
-    {
-        //Here we assume a is a column and b is a row
-        //Need mathcing matrices
-
-        matrix Out = new matrix(a.size,b.size);
-        for (int i=0;i<a.size;i++)
-            for (int j=0;j<b.size;j++)
-            {
-                //a.width = 1, so only this
-                Out[i,j]=a[i]*b[j];
-            }
-
-        return Out;
-    }
-
-
 
     //Multiply matrix on (column) vectors
     public static vector operator* (matrix a, vector b)
@@ -567,4 +539,3 @@ public class matrix
 
 
 }
-

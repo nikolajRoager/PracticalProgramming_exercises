@@ -24,6 +24,7 @@ public class vector
 		size=n;
 		data = new double[size];
 
+        //Default to identity
         for (int i = 0; i < size; ++i)
             this[i]= 0;
     }
@@ -34,20 +35,6 @@ public class vector
 		get => data[i];
 		set => data[i]=value;
 	}
-
-    //Simple display function, a list which, for instance, can be written to a table
-    public string asList(string sep = "\t")
-    {
-        string Out = "";
-        for (int i = 0; i < size; ++i)
-        {
-            Out+= this[i];
-            if (i<size-1)
-                Out+=sep;
-        }
-
-        return Out;
-    }
 
     //Pretty display function
     public override string ToString()
@@ -257,4 +244,3 @@ public class vector
 
 
 }
-

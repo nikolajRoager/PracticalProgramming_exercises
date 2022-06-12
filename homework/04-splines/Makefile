@@ -4,14 +4,12 @@
 CSC = mcs
 RUN = mono
 
-all: All.png plotutils.png logA logB
+all: All.png logA logB
 ;cat logA
 ;cat logB
 All.png: plot.gpi linear.tsv qspline.tsv plotutils.tsv cspline.tsv
 ;pyxplot $<
 
-plotutils.png: Makefile
-;cat data.tsv | spline --boundary-condition 0 | graph -T png > plotutils.png
 
 plotutils.tsv: Makefile
 ;cat data.tsv | spline --boundary-condition 0 > $@

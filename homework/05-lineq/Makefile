@@ -1,12 +1,15 @@
 CSC = mcs
 RUN = mono
 
-all : logA logB time.png
+all : outA.txt outB.txt time.png
+	cat outA.txt;
+	cat outB.txt
 
-logA: A_GramSchmidt.exe
+
+outA.txt: A_GramSchmidt.exe
 	$(RUN) $< 9 3 > $@
 
-logB: B_Inverse.exe
+outB.txt: B_Inverse.exe
 	$(RUN) $< 6 > $@
 
 time.png: time.tsv time_fit.tsv time_single.tsv time_s_fit.tsv

@@ -26,14 +26,14 @@ public static class main
         double p= 3.0;
         Func<double,double> invxp = x  => 1.0/Pow(x,p);
 
-        (res0,err0,itr0) = integrate(invxp,1,double.PositiveInfinity);
-        WriteLine($"integrate(1/x^{p},1,infinity)={res0}±{err0} at {itr0} calls; should be {1/(p-1)}");
+        (res0,err0,itr0) = integrate(invxp,1,double.PositiveInfinity);//The minimum error, because sometimes err is return as do being 0, which would always fail.
+        WriteLine($"integrate(1/x^{p},1,infinity)={res0}±{err0} at {itr0} calls; "+(approx(1/(p-1),res0,Max(err0,1e-8),Max(err0,1e-8)) ?"PASS" : "FAIL"));
 
         p= 4.0;
          invxp = x  => 1.0/Pow(x,p);
 
         (res0,err0,itr0) = integrate(invxp,1,double.PositiveInfinity);
-        WriteLine($"integrate(1/x^{p},1,infinity)={res0}±{err0} at {itr0} calls; should be {1/(p-1)}");
+        WriteLine($"integrate(1/x^{p},1,infinity)={res0}±{err0} at {itr0} calls; " +(approx(1/(p-1),res0,Max(err0,1e-8),Max(err0,1e-8)) ?"PASS" : "FAIL"));
 
         double res1;
         double err1;
@@ -41,13 +41,13 @@ public static class main
         Func<double,double> gauss = x  => Exp(-x*x);
 
         (res1,err1,itr1) = integrate(gauss,double.NegativeInfinity,double.PositiveInfinity);
-        WriteLine($"integrate(exp(-x*x),-infinity,infinity)={res1}±{err1} at {itr1} calls; should be {Sqrt(PI)}");
+        WriteLine($"integrate(exp(-x*x),-infinity,0)={res1}±{err1} at {itr1} calls, should be {Sqrt(PI)/2}; "+(approx(Sqrt(PI)/2,res1,Max(err1,1e-8),Max(err1,1e-8)) ?"PASS" : "FAIL"));
 
 
 
 
         (res1,err1,itr1) = integrate(gauss,double.NegativeInfinity,0);
-        WriteLine($"integrate(exp(-x*x),-infinity,0)={res1}±{err1} at {itr1} calls; should be {Sqrt(PI)/2}");
+        WriteLine($"integrate(exp(-x*x),-infinity,0)={res1}±{err1} at {itr1} calls, should be {Sqrt(PI)/2}; "+(approx(Sqrt(PI)/2,res1,Max(err1,1e-8),Max(err1,1e-8)) ?"PASS" : "FAIL"));
 
 
         return 0;

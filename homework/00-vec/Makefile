@@ -4,12 +4,12 @@ CSflags =-optimize+
 #I can't place literal tabs, tab default to space x4. This seems better
 .RECIPEPREFIX := ;
 
-all: out.txt
-;cat out.txt
+all: outA_B_AND_C.txt
+;cat outA_B_AND_C.txt
 
 #I want make to update if i change the makefie
-out.txt : main.exe
-;mono main.exe > out.txt
+outA_B_AND_C.txt : main.exe
+;mono main.exe > outA_B_AND_C.txt
 
 main.exe : main.cs vec.dll
 ;$(Compiler) main.cs -out:main.exe -reference:vec.dll $(CSflags)
@@ -20,5 +20,5 @@ vec.dll: vec.cs
 
 .PHONY : clean
 clean:# a phoney target, can be used to run any commands
-;rm -f out.txt main.exe
+;rm -f outA_B_AND_C.txt main.exe
 # remove secondary files

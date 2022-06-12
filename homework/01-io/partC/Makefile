@@ -7,13 +7,13 @@ CSflags =-optimize+
 
 #I saved the actual output as txt
 #Log is incidentally created at the same time as out
-all : outc.txt
-;cat logc.csv
-;cat outc.txt
+all : outC.txt
+;cat outC.csv
+;cat outC.txt
 
 
-outc.txt : partC.exe input.txt
-;$(Runtime) $< input.txt $@ >logc.csv
+outC.txt : partC.exe input.txt
+;$(Runtime) $< input.txt $@ >outC.csv
 
 partC.exe : partC.cs Makefile
 ;$(Compiler) $< -target:exe -out:$@
