@@ -1,0 +1,20 @@
+set terminal png
+set output 'OlympusMons.png'
+set xlabel 'Long (deg)'
+set ylabel 'Lat (deg)'
+set zlabel 'h (km)'
+set key below
+set title 'Olympus Mons- front view'
+
+#set style line 1 \
+#    linecolor rgb '#0060ad' \
+#    linetype 1 linewidth 2 \
+#    pointtype 7 pointsize 0.5
+
+
+#set style line 2 \
+#    linecolor rgb '#600000' \
+#    linetype 1 linewidth 2.0
+
+splot 'OlympusMons_data.tsv' index 0 using 1:2:($3/1000) with points title 'grid data'
+
