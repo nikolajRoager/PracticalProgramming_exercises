@@ -1,0 +1,5 @@
+Loading data
+Setting up bilinear interpolation
+Verifying the solution for all boundary conditions ...
+ --- PASS: Solution matches all boundary conditions within relative and absolute error 10^-5
+Calculating and saving high resolution output

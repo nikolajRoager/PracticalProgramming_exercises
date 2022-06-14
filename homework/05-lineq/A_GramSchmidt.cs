@@ -111,7 +111,7 @@ public static class main
         else
             WriteLine("QR decomposition TEST PASSED");
 
-        WriteLine("Now trying to solve the following linear system Ax=b with");
+        WriteLine("Now trying to solve the following linear system A x=b with");
 
         A= new matrix(h,h);
         var b = vector(h);//Not its own class, but actually just a single column matrix

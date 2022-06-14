@@ -1,20 +1,19 @@
 set terminal png
-set output 'OlympusMons.png'
+set output 'OlympusMons_both.png'
 set xlabel 'Long (deg)'
 set ylabel 'Lat (deg)'
 set zlabel 'h (km)'
 set key below
-set title 'Olympus Mons- front view'
-
-#set style line 1 \
-#    linecolor rgb '#0060ad' \
-#    linetype 1 linewidth 2 \
-#    pointtype 7 pointsize 0.5
-
-
-#set style line 2 \
-#    linecolor rgb '#600000' \
-#    linetype 1 linewidth 2.0
-
-splot 'OlympusMons_data.tsv' index 0 using 1:2:($3/1000) with points title 'grid data'
-
+set title 'Olympus Mons'
+splot\
+'OlympusMons_interpolated.tsv' using 1:2:($3/1000)  matrix nonuniform with lines title 'Interpolated data',\
+'OlympusMons_data.tsv' using 1:2:($3/1000)  matrix nonuniform with lp pointsize 2 pointtype 3 title 'Original data'
+set output 'OlympusMons_int.png'
+set xlabel 'Long (deg)'
+set ylabel 'Lat (deg)'
+set zlabel 'h (km)'
+set key below
+set title 'Olympus Mons'
+set hidden3d
+splot\
+'OlympusMons_interpolated.tsv' using 1:2:($3/1000)  matrix nonuniform with lines title 'Interpolated data',\

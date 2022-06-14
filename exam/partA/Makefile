@@ -3,28 +3,29 @@
 CSC = mcs
 RUN = mono
 
-all : OlympusMons.png
-#;cat outC.txt
+all : OlympusMons_both.png OlympusMons_int.png outA.txt
+;cat outA.txt
 
 
-OlympusMons.png NoctisLabyrinthus.png:
+
+OlympusMons_both.png OlympusMons_int.png  : OlympusMons_interpolated.tsv
 ;gnuplot plot.gpi
 
-#outC.txt rosenbrock_best.tsv himmelblau_best.tsv : partC.exe
-#;$(RUN) $< > outC.txt
+outA.txt OlympusMons_interpolated.tsv : partA.exe
+;$(RUN) $< OlympusMons_data.tsv 1> OlympusMons_interpolated.tsv 2> outA.txt
 
 
-#partC.exe:main.cs minimizer.dll matrix.dll vector.dll
-#;$(CSC) -target:exe -out:$@ -reference:vector.dll -reference:matrix.dll  -reference:minimizer.dll $<
+partA.exe:main.cs  matrix.dll vector.dll binary_search.dll
+;$(CSC) -target:exe -out:$@ -reference:vector.dll -reference:binary_search.dll -reference:matrix.dll  $<
 
-#minimizer.dll : minimizer.cs matrix.dll vector.dll
-#;$(CSC) $< -target:library -reference:matrix.dll -reference:vector.dll  -out:$@
+matrix.dll : matrix.cs vector.dll
+;$(CSC) $< -target:library -reference:vector.dll  -out:$@
 
-#matrix.dll : matrix.cs vector.dll
-#;$(CSC) $< -target:library -reference:vector.dll  -out:$@
+vector.dll : vector.cs
+;$(CSC) $< -target:library  -out:$@
 
-#vector.dll : vector.cs
-#;$(CSC) $< -target:library  -out:$@
+binary_search.dll : binary_search.cs vector.dll
+;$(CSC) $< -target:library -reference:vector.dll  -out:$@
 
 .PHONY: clean
 
