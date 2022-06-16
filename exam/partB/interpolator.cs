@@ -15,7 +15,7 @@ public class bicubic
 
 
     //z(d_x,d_y) = sum_{i=0}^3 sum_{j=0}^3 a_{ijkl} d_x^id_x^j
-    //But for book-keeping purposes, I find it is easier to make A a monsterous 16*(n-1)*(m-1) vector
+    //For book-keeping purposes, I find it is easier to make A a monsterous 16*(n-1)*(m-1) vector
     private vector a;
 
     public bicubic(vector  xdata, vector   ydata,matrix zdata)
@@ -26,7 +26,6 @@ public class bicubic
         x = xdata.copy();
         y = ydata.copy();
         z = zdata.copy();
-
 
         //Verify that the data works
         double pdata = xdata[0];
@@ -52,13 +51,45 @@ public class bicubic
         //have a_ijkl = a[i+j*4+16*k+16*(n-1)*l]
 
         //We want to set up a set of linear equations A a =b to determine a.
-        matrix A = new matrix(16*(n-1)*(m-1),16*(n-1)*(m-1));
-        //zero-set matrix A, as it starts as being the identity
-        for (int i = 0; i<16*(n-1)*(m-1); ++i)
-            A[i,i]=0;
+        //This IS possible, I have done it before, but QR factorization with a 16*(n-1)*(m-1) by 16*(n-1)*(m-1) matrix is slooooow, it is much faster to try to solve this on a grid by grid basis with (n-1)*(m-1) 16 by 16 matrices, so that is what I will do, alas, this means I will have to try to guess what the derivatives should be, at all the corner points
 
-        vector B = new vector(16*(n-1)*(m-1));
 
+
+        matrix dxzdata= new matrix(n,m);
+        matrix dyzdata= new matrix(n,m);
+
+        //Calculate dz/dx and dz/dy derivatives, if we are at an edge, the condition is that the double-derivative is 0
+        for (int j = 0; j < m; ++j)
+            for (int i = 0; i < n; ++i)
+            {
+
+                    if (j>0 && j < m-1)//Lets go with the average of the slope of a straight line to either neighbour
+                        dxzdata[i,j]=0*0.5*(zdata[i,j+1]-zdata[i,j])/(xdata[j+1]-xdata[j])+0.5*(zdata[i,j]-zdata[i,j-1])/(xdata[j]-xdata[j-1]);
+                    else if (j==0)//the double-derivative 0 means that the slope get to just continue from the previous neighbourg point
+                        dxzdata[i,j]=0*(zdata[i,j+1]-zdata[i,j])/(xdata[j+1]-xdata[j]);
+                    else
+                        dxzdata[i,j]=0*(zdata[i,j]-zdata[i,j-1])/(xdata[j]-xdata[j-1]);
+
+                    if (i>0 && i < n-1)
+                        dyzdata[i,j]=0*0.5*(zdata[i+1,j]-zdata[i,j])/(ydata[i+1]-ydata[i])+0.5*(zdata[i,j]-zdata[i-1,j])/(ydata[i]-ydata[i-1]);
+                    else if (i==0)
+                        dyzdata[i,j]=0*(zdata[i+1,j]-zdata[i,j])/(ydata[i+1]-ydata[i]);
+                    else
+                        dyzdata[i,j]=0*(zdata[i,j]-zdata[i-1,j])/(ydata[i]-ydata[i-1]);
+
+
+            }
+
+        matrix dxdyzdata= new matrix(n,m);
+
+        for (int j = 0; j < m; ++j)
+            for (int i = 0; i < n; ++i)
+                if (j>0 && j < m-1)//Lets go with the average of the slope of a straight line to either neighbour
+                    dxdyzdata[i,j]=0.5*(dyzdata[i,j+1]-dyzdata[i,j])/(xdata[j+1]-xdata[j])+0.5*(dyzdata[i,j]-dyzdata[i,j-1])/(xdata[j]-xdata[j-1]);
+                else if (j==0)//the double-derivative 0 means that the slope get to just continue from the previous neighbourg point
+                    dxdyzdata[i,j]=(dyzdata[i,j+1]-dyzdata[i,j])/(xdata[j+1]-xdata[j]);
+                else
+                    dxdyzdata[i,j]=(zdata[i,j]-zdata[i,j-1])/(xdata[j]-xdata[j-1]);
 
 
 
@@ -69,12 +100,16 @@ public class bicubic
             double h_l = ydata[l+1]-ydata[l];
             for (int k = 0; k < m-1; ++k)
             {
-
                 double w_k = xdata[k+1]-xdata[k];
 
-                //have a_ijkl = a[i+j*4+16*k+16*(n-1)*l]
-                //offset due to kl
-                int kl = k*16+16*(n-1)*l;
+                matrix A = new matrix(16,16);
+                vector B = new vector(16);
+                //zero-set matrix A, as it starts as being the identity
+                for (int i = 0; i<16; ++i)
+                    A[i,i]=0;
+
+
+
                 //Now have a_ijkl = a[i+j*4+kl]
                 //Can do having be that  the corner point  of each grid point do being:
 
@@ -86,96 +121,116 @@ public class bicubic
                 */
                 //Or
 
-                //First set of condition, do be having points correct yes
+                //First set of condition, points must match
 
-                A[0+kl,kl]=1;//1 a_{00}^{(k,l)}
-                B[0+kl]=zdata[l  ,k];// = z_{l,k},
-
+                A[0,0]=1;//1 a_{00}^{(k,l)}
+                B[0]=zdata[l  ,k];// = z_{l,k},
 
                 //f^{k,l}(w_k,0)   &= \sum_{i=0}^3  w_k^i a_{i0}^{(k,l)}                    = z_{l,k+1},\\
                 for (int i = 0; i <= 3; ++i)
-                    A[1+kl,i+kl] = Pow(w_k,i);
-                B[1+kl]=zdata[l  ,k+1];//= z_{l,k+1},
+                    A[1,i] = Pow(w_k,i);
+                B[1]=zdata[l  ,k+1];//= z_{l,k+1},
 
 
                 //f^{k,l}(0,h_l)   &= \sum_{j=0}^3  h_l^j a_{0j}^{(k,l)}                    = z_{l+1,k},\\
                 for (int j = 0; j <= 3; ++j)
-                    A[2+kl,j*4+kl] = Pow(h_l,j);
-                B[2+kl]=zdata[l+1,k];//= z_{l+1,k},
+                    A[2,j*4] = Pow(h_l,j);
+                B[2]=zdata[l+1,k];//= z_{l+1,k},
 
                 //f^{k,l}(w_k,h_l) &= \sum_{i=0}^3 \sum_{j=0}^3  w_k^i h_l^j a_{ij}^{(k,l)} = z_{l+1,k+1}.
                 for (int i = 0; i <= 3; ++i)
                     for (int j = 0; j <= 3; ++j)
-                        A[3+kl,i+j*4+kl] =Pow(w_k,i)*Pow(h_l,j);
-                B[3+kl]=zdata[l+1,k+1];//= z_{l+1,k+1},
+                        A[3,i+j*4] =Pow(w_k,i)*Pow(h_l,j);
+                B[3]=zdata[l+1,k+1];//= z_{l+1,k+1},
 
-                //Derivatives be
+                //Derivatives and 2nd order be
                 /*
 
                     \begin{align}
                     \frac{d}{dx} f^{k,l}(\Delta x,\Delta y) &= \sum_{i=1}^3 \sum_{j=0}^3  i \Delta x^{i-1} \Delta y^j a_{ij}^{(k,l)},\\
                     \frac{d}{dy} f^{k,l}(\Delta x,\Delta y) &= \sum_{i=0}^3 \sum_{j=1}^3  j \Delta x^i \Delta y^{j-1} a_{ij}^{(k,l)},\\
-                    \frac{d^2}{dx dy} f^{k,l}(\Delta x,\Delta y) &= \sum_{i=1}^3 \sum_{j=1}^3  ij \Delta x^{i-1} \Delta y^{j-1} a_{ij}^{(k,l)},
+                    \frac{d^2}{dx dy} f^{k,l}(\Delta x,\Delta y) &= \sum_{i=1}^3 \sum_{j=1}^3  ij \Delta x^{i-1} \Delta y^{j-1} a_{ij}^{(k,l)},\\
                     \end{align}
 
                     Corner derivative x's be
 
                 */
 
+
+                //xderivatives, only if we are not near an x-edge
+
                 //dx    f^{k,l}(0,0) &=    a_{10}^{(k,l)},\\
-                A[4+kl,1+kl]=1;
+                A[4,1]=1;
+                B[4]=dxzdata[l  ,k];
 
                 //dx    f^{k,l}(w,0) &= \sum_{i=1}^3  i w^{i-1} a_{i0}^{(k,l)},\\
                 for (int i = 1; i <= 3; ++i)
-                    A[5+kl,i+kl] = i*Pow(w_k,i-1);
+                    A[5,i] = i*Pow(w_k,i-1);
+                B[5]=dxzdata[l  ,k+1];
 
 
                 //dx    f^{k,l}(0,h) &= \sum_{j=0}^3  1 h^j     a_{1j}^{(k,l)},\\
                 for (int j = 0; j <= 3; ++j)
-                    A[6+kl,1+j*4+kl] = Pow(h_l,j);
+                    A[6,1+j*4] = Pow(h_l,j);
+                B[6]=dxzdata[l+1  ,k];
 
                 //dx    f^{k,l}(w,h) &= \sum_{i=1}^3 \sum_{j=0}^3  i w^{i-1} h^j a_{ij}^{(k,l)},\\
                 for (int i = 1; i <= 3; ++i)
                     for (int j = 0; j <= 3; ++j)
-                        A[7+kl,i+j*4+kl] =i*Pow(w_k,i-1)*Pow(h_l,j);
+                        A[7,i+j*4] =i*Pow(w_k,i-1)*Pow(h_l,j);
+                B[7]=dxzdata[l+1  ,k+1];
 
                 //derivative y's
                 //dy    f^{k,l}(0,0)     &= a_{01}^{(k,l)}
-                A[8+kl,4+kl]=1;
+                A[8,4]=1;
+                B[8] =dyzdata[l  ,k];
                 //dy    f^{k,l}(w_k,0)   &= \sum_{i=0}^3 j w_k^i a_{i1}^{(k,l)}
                 for (int i = 0; i <= 3; ++i)
-                    A[9+kl,i+4+kl] = Pow(w_k,i);
+                    A[9,i+4] = Pow(w_k,i);
+                B[9] =dyzdata[l  ,k+1];
                 //dy    f^{k,l}(0,h_l)   &= \sum_{j=1}^3 j h_l^{j-1} a_{0j}^{(k,l)}
                 for (int j = 1; j <= 3; ++j)
-                    A[10+kl,j*4+kl] = j*Pow(h_l,j-1);
+                    A[10,j*4] = j*Pow(h_l,j-1);
                 //dy    f^{k,l}(w_k,h_l) &= \sum_{i=0}^3 \sum_{j=1}^3  j w_k^i h_l^{j-1} a_{ij}^{(k,l)}
+                B[10]=dyzdata[l+1  ,k];
                 for (int i = 0; i <= 3; ++i)
                     for (int j = 1; j <= 3; ++j)
-                        A[11+kl,i+j*4+kl] =j*Pow(w_k,i)*Pow(h_l,j-1);
+                        A[11,i+j*4] =j*Pow(w_k,i)*Pow(h_l,j-1);
+                B[11]=dyzdata[l+1  ,k+1];
 
                 //derivative xy
 
                 // \frac{d^2}{dx dy} f^{k,l}(\Delta x,\Delta y) &= \sum_{i=1}^3 \sum_{j=1}^3  ij \Delta x^{i-1} \Delta y^{j-1} a_{ij}^{(k,l)},
 
                 //dydx    f^{k,l}(0,0)     &= a_{11}^{(k,l)}
-                A[12+kl,1+4+kl]=1;
+                A[12,1+4]=1;
+                B[12]=dxdyzdata[l+1  ,k+1];
                 //dydx    f^{k,l}(w_k,0)   &= \sum_{i=1}^3 ji w_k^{i-1} a_{i1}^{(k,l)}
                 for (int i = 1; i <= 3; ++i)
-                    A[13+kl,i+4+kl] = i*Pow(w_k,i-1);
+                    A[13,i+4] = i*Pow(w_k,i-1);
+                B[13]=dxdyzdata[l  ,k+1];
                 //dydx    f^{k,l}(0,h_l)   &= \sum_{j=1}^3 ji h_l^{j-1} a_{1j}^{(k,l)}
                 for (int j = 1; j <= 3; ++j)
-                    A[14+kl,1+j*4+kl] = j*Pow(h_l,j-1);
+                    A[14,1+j*4] = j*Pow(h_l,j-1);
+                B[14]=dxdyzdata[l+1  ,k];
                 //dydx    f^{k,l}(w_k,h_l) &= \sum_{i=0}^3 \sum_{j=1}^3  ji w_k^{i-1} h_l^{j-1} a_{ij}^{(k,l)}
                 for (int i = 0; i <= 3; ++i)
                     for (int j = 1; j <= 3; ++j)
-                        A[15+kl,i+j*4+kl] =j*i*Pow(w_k,i-1)*Pow(h_l,j-1);
+                        A[15,i+j*4] =j*i*Pow(w_k,i-1)*Pow(h_l,j-1);
+                B[15]=dxdyzdata[l+1  ,k+1];
 
+
+                //have a_ijkl = a[i+j*4+16*k+16*(n-1)*l]
+                //offset due to kl
+                (matrix Q,matrix R) = A.getQR();
+                vector a_kl = matrix.QRsolve(Q,R,B);
+                int kl = k*16+16*(n-1)*l;
+                for (int i = 0; i < 16; ++i)
+                    a[kl+i]=a_kl[i];
 
             }
         }
 
-        (matrix Q,matrix R) = A.getQR();
-        a = matrix.QRsolve(Q,R,B);
 
 /*
         for (int i = 0; i < n-1; ++i)
