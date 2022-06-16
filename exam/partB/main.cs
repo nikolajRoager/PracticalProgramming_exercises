@@ -1,7 +1,7 @@
 using System;
 using static System.Console;
 using static System.Math;
-using static bilenear;
+using static bicubic;
 
 public static class main
 {
@@ -103,7 +103,7 @@ public static class main
 
 
         Error.WriteLine("Setting up bilinear interpolation");
-        bilenear interpolator= new bilenear(xlist,ylist,zdata);
+        bicubic interpolator= new bicubic(xlist,ylist,zdata);
         Error.WriteLine("Verifying the solution for all boundary conditions ...");
         if (!interpolator.verify_all())
             return 1;
