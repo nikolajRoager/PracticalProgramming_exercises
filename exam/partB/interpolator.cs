@@ -9,23 +9,23 @@ public class bicubic
     private int n;
     private int m;
 
-    private vector x;
-    private vector y;
-    private matrix z;//The data of all the vertices, which we want to interpolate
+    private vector xdata;
+    private vector ydata;
+    private matrix zdata;//The data of all the vertices, which we want to interpolate
 
 
     //z(d_x,d_y) = sum_{i=0}^3 sum_{j=0}^3 a_{ijkl} d_x^id_x^j
     //For book-keeping purposes, I find it is easier to make A a monsterous 16*(n-1)*(m-1) vector
     private vector a;
 
-    public bicubic(vector  xdata, vector   ydata,matrix zdata)
+    public bicubic(vector  _xdata, vector   _ydata,matrix _zdata)
     {
+        xdata = _xdata.copy();
+        ydata = _ydata.copy();
+        zdata = _zdata.copy();
         n = ydata.size;
         m = xdata.size;
 
-        x = xdata.copy();
-        y = ydata.copy();
-        z = zdata.copy();
 
         //Verify that the data works
         double pdata = xdata[0];
@@ -64,18 +64,18 @@ public class bicubic
             {
 
                     if (j>0 && j < m-1)//Lets go with the average of the slope of a straight line to either neighbour
-                        dxzdata[i,j]=0*0.5*(zdata[i,j+1]-zdata[i,j])/(xdata[j+1]-xdata[j])+0.5*(zdata[i,j]-zdata[i,j-1])/(xdata[j]-xdata[j-1]);
+                        dxzdata[i,j]=0.5*(zdata[i,j+1]-zdata[i,j])/(xdata[j+1]-xdata[j])+0.5*(zdata[i,j]-zdata[i,j-1])/(xdata[j]-xdata[j-1]);
                     else if (j==0)//the double-derivative 0 means that the slope get to just continue from the previous neighbourg point
-                        dxzdata[i,j]=0*(zdata[i,j+1]-zdata[i,j])/(xdata[j+1]-xdata[j]);
+                        dxzdata[i,j]=(zdata[i,j+1]-zdata[i,j])/(xdata[j+1]-xdata[j]);
                     else
-                        dxzdata[i,j]=0*(zdata[i,j]-zdata[i,j-1])/(xdata[j]-xdata[j-1]);
+                        dxzdata[i,j]=(zdata[i,j]-zdata[i,j-1])/(xdata[j]-xdata[j-1]);
 
                     if (i>0 && i < n-1)
-                        dyzdata[i,j]=0*0.5*(zdata[i+1,j]-zdata[i,j])/(ydata[i+1]-ydata[i])+0.5*(zdata[i,j]-zdata[i-1,j])/(ydata[i]-ydata[i-1]);
+                        dyzdata[i,j]=0.5*(zdata[i+1,j]-zdata[i,j])/(ydata[i+1]-ydata[i])+0.5*(zdata[i,j]-zdata[i-1,j])/(ydata[i]-ydata[i-1]);
                     else if (i==0)
-                        dyzdata[i,j]=0*(zdata[i+1,j]-zdata[i,j])/(ydata[i+1]-ydata[i]);
+                        dyzdata[i,j]=(zdata[i+1,j]-zdata[i,j])/(ydata[i+1]-ydata[i]);
                     else
-                        dyzdata[i,j]=0*(zdata[i,j]-zdata[i-1,j])/(ydata[i]-ydata[i-1]);
+                        dyzdata[i,j]=(zdata[i,j]-zdata[i-1,j])/(ydata[i]-ydata[i-1]);
 
 
             }
@@ -94,11 +94,12 @@ public class bicubic
 
 
         //Set conditions on grid by grid basis
-        for (int l = 0; l < n-1; ++l)
+        for (int l = 0; l < n-1; ++l)//l is with Y associated
         {
 
             double h_l = ydata[l+1]-ydata[l];
-            for (int k = 0; k < m-1; ++k)
+            for (int k = 0; k < m-1; ++k)//k is with X associated
+
             {
                 double w_k = xdata[k+1]-xdata[k];
 
@@ -107,7 +108,6 @@ public class bicubic
                 //zero-set matrix A, as it starts as being the identity
                 for (int i = 0; i<16; ++i)
                     A[i,i]=0;
-
 
 
                 //Now have a_ijkl = a[i+j*4+kl]
@@ -204,17 +204,18 @@ public class bicubic
 
                 //dydx    f^{k,l}(0,0)     &= a_{11}^{(k,l)}
                 A[12,1+4]=1;
-                B[12]=dxdyzdata[l+1  ,k+1];
+                B[12]=dxdyzdata[l  ,k];
+
                 //dydx    f^{k,l}(w_k,0)   &= \sum_{i=1}^3 ji w_k^{i-1} a_{i1}^{(k,l)}
                 for (int i = 1; i <= 3; ++i)
-                    A[13,i+4] = i*Pow(w_k,i-1);
+                    A[13,i+4] = 1*i*Pow(w_k,i-1);
                 B[13]=dxdyzdata[l  ,k+1];
                 //dydx    f^{k,l}(0,h_l)   &= \sum_{j=1}^3 ji h_l^{j-1} a_{1j}^{(k,l)}
                 for (int j = 1; j <= 3; ++j)
-                    A[14,1+j*4] = j*Pow(h_l,j-1);
+                    A[14,1+j*4] = 1*j*Pow(h_l,j-1);
                 B[14]=dxdyzdata[l+1  ,k];
                 //dydx    f^{k,l}(w_k,h_l) &= \sum_{i=0}^3 \sum_{j=1}^3  ji w_k^{i-1} h_l^{j-1} a_{ij}^{(k,l)}
-                for (int i = 0; i <= 3; ++i)
+                for (int i = 1; i <= 3; ++i)
                     for (int j = 1; j <= 3; ++j)
                         A[15,i+j*4] =j*i*Pow(w_k,i-1)*Pow(h_l,j-1);
                 B[15]=dxdyzdata[l+1  ,k+1];
@@ -224,7 +225,7 @@ public class bicubic
                 //offset due to kl
                 (matrix Q,matrix R) = A.getQR();
                 vector a_kl = matrix.QRsolve(Q,R,B);
-                int kl = k*16+16*(n-1)*l;
+                int kl = l*16+16*(n-1)*k;
                 for (int i = 0; i < 16; ++i)
                     a[kl+i]=a_kl[i];
 
@@ -232,62 +233,36 @@ public class bicubic
         }
 
 
-/*
-        for (int i = 0; i < n-1; ++i)
-            for (int j = 0; j < m-1; ++j)
-            {
-
-                //We have 4 linear equations
-
-                //a[i,j]*x[j  ] + b[i,j]*y[i  ] + c[i,j]*x[j  ]*y[i  ] + d[i,j]= z[i  ,j  ];
-                //a[i,j]*x[j+1] + b[i,j]*y[i  ] + c[i,j]*x[j+1]*y[i  ] + d[i,j]= z[i  ,j+1];
-                //a[i,j]*x[j  ] + b[i,j]*y[i+1] + c[i,j]*x[j  ]*y[i+1] + d[i,j]= z[i+1,j  ];
-                //a[i,j]*x[j+1] + b[i,j]*y[i+1] + c[i,j]*x[j+1]*y[i+1] + d[i,j]= z[i+1,j+1];
-
-                //Now I can solve those analytically... or ... time to bust out that linear equation solver I have lying around in in my homework folder
-
-                //Juts to be clear, this equation is A \vec{X} =\vec{B}
-                //where
-                matrix A = new matrix(4,4);
-                A[0,0] = xdata[j  ]; A[0,1] = ydata[i  ]; A[0,2]= xdata[j  ]*ydata[i  ]; A[0,3]=1;
-                A[1,0] = xdata[j+1]; A[1,1] = ydata[i  ]; A[1,2]= xdata[j+1]*ydata[i  ]; A[1,3]=1;
-                A[2,0] = xdata[j  ]; A[2,1] = ydata[i+1]; A[2,2]= xdata[j  ]*ydata[i+1]; A[2,3]=1;
-                A[3,0] = xdata[j+1]; A[3,1] = ydata[i+1]; A[3,2]= xdata[j+1]*ydata[i+1]; A[3,3]=1;
-                //and
-                vector B = new vector(4);
-                B[0]=zdata[i  ,j  ];
-                B[1]=zdata[i  ,j+1];
-                B[2]=zdata[i+1,j  ];
-                B[3]=zdata[i+1,j+1];
-
-                (matrix Q,matrix R) = A.getQR();
-                vector X = matrix.QRsolve(Q,R,B);
-
-                //Now x is the vector of (a,b,c,d) so:
-                a[i,j]=X[0];
-                b[i,j]=X[1];
-                c[i,j]=X[2];
-                d[i,j]=X[3];
-            }
-
-        */
     }
 
-    public double interpolate(double px, double py)
-    {
-        //Both get the grid we are in, and clip to borders if we are outside
-        int k = 0;
-        int l = 0;
 
-        (l,px)=binary_search.binsearch(px,x);
-        (k,py)=binary_search.binsearch(py,y);
+    public double interpolate(double px, double py, int l=-1, int k=-1)
+    {
+
+        //Both get the grid we are in, and clip to borders if we are outside
+        //If a grid points was supplied, we are forced to use it (useful for testing boundary conditions), so clip to its border
+        if (k==-1)
+            (k,px)=binary_search.binsearch(px,xdata);
+        else if(xdata[k]>px)
+            px=xdata[k];
+        else if (k<m-1)
+            if(xdata[k+1]<px)
+                px=xdata[k+1];
+        if (l==-1)
+            (l,py)=binary_search.binsearch(py,ydata);
+        else if(ydata[l]>py)
+            py=ydata[l];
+        else if (l<n-1)
+            if(ydata[l+1]<py)
+                py=ydata[l+1];
+
 
     //z(d_x,d_y) = sum_{i=0}^3 sum_{j=0}^3 a_{ij} d_x^id_x^j
 
         //pre get the squares and cubes of the difference from top-left corner
 
-        double Dx = px-x[l];
-        double Dy = py-y[k];
+        double Dx = px-xdata[k];
+        double Dy = py-ydata[l];
         double[] dx = {1,Dx,Dx*Dx,Dx*Dx*Dx};
         double[] dy = {1,Dy,Dy*Dy,Dy*Dy*Dy};
 
@@ -295,49 +270,282 @@ public class bicubic
         for (int i = 0; i <=3; ++i)
             for (int j = 0; j <=3; ++j)
             {
-                OUT+=a[i+j*4+16*k+16*(n-1)*l]*dx[j]*dy[i];
+                OUT+=a[i+j*4+16*l+16*(n-1)*k]*dx[i]*dy[j];
             }
         return OUT;
     }
 
+
+    public double interpolate_dx(double px, double py, int l=-1, int k=-1)
+    {
+
+        //Both get the grid we are in, and clip to borders if we are outside
+        //If a grid points was supplied, we are forced to use it (useful for testing boundary conditions), so clip to its border
+        if (k==-1)
+            (k,px)=binary_search.binsearch(px,xdata);
+        else if(xdata[k]>px)
+            px=xdata[k];
+        else if (k<m-1)
+            if(xdata[k+1]<px)
+                px=xdata[k+1];
+        if (l==-1)
+            (l,py)=binary_search.binsearch(py,ydata);
+        else if(ydata[l]>py)
+            py=ydata[l];
+        else if (l<n-1)
+            if(ydata[l+1]<py)
+                py=ydata[l+1];
+
+
+    //z(d_x,d_y) = sum_{i=0}^3 sum_{j=0}^3 a_{ij} d_x^id_x^j
+
+        //pre get the squares and cubes of the difference from top-left corner
+
+        double Dx = px-xdata[k];
+        double Dy = py-ydata[l];
+        double[] dx = {1,Dx,Dx*Dx,Dx*Dx*Dx};
+        double[] dy = {1,Dy,Dy*Dy,Dy*Dy*Dy};
+
+        double OUT = 0;
+        for (int i = 1; i <=3; ++i)
+            for (int j = 0; j <=3; ++j)
+            {
+                OUT+=i*a[i+j*4+16*l+16*(n-1)*k]*dx[i-1]*dy[j];
+            }
+        return OUT;
+    }
+
+    public double interpolate_dy(double px, double py, int l=-1, int k=-1)
+    {
+
+        //Both get the grid we are in, and clip to borders if we are outside
+        //If a grid points was supplied, we are forced to use it (useful for testing boundary conditions), so clip to its border
+        if (k==-1)
+            (k,px)=binary_search.binsearch(px,xdata);
+        else if(xdata[k]>px)
+            px=xdata[k];
+        else if (k<m-1)
+            if(xdata[k+1]<px)
+                px=xdata[k+1];
+        if (l==-1)
+            (l,py)=binary_search.binsearch(py,ydata);
+        else if(ydata[l]>py)
+            py=ydata[l];
+        else if (l<n-1)
+            if(ydata[l+1]<py)
+                py=ydata[l+1];
+
+
+    //z(d_x,d_y) = sum_{i=0}^3 sum_{j=0}^3 a_{ij} d_x^id_x^j
+
+        //pre get the squares and cubes of the difference from top-left corner
+
+        double Dx = px-xdata[k];
+        double Dy = py-ydata[l];
+        double[] dx = {1,Dx,Dx*Dx,Dx*Dx*Dx};
+        double[] dy = {1,Dy,Dy*Dy,Dy*Dy*Dy};
+
+        double OUT = 0;
+        for (int i = 0; i <=3; ++i)
+            for (int j = 1; j <=3; ++j)
+            {
+                OUT+=j*a[i+j*4+16*l+16*(n-1)*k]*dx[i]*dy[j-1];
+            }
+        return OUT;
+    }
+
+
+    public double interpolate_dxdy(double px, double py, int l=-1, int k=-1)
+    {
+
+        //Both get the grid we are in, and clip to borders if we are outside
+        //If a grid points was supplied, we are forced to use it (useful for testing boundary conditions), so clip to its border
+        if (k==-1)
+            (k,px)=binary_search.binsearch(px,xdata);
+        else if(xdata[k]>px)
+            px=xdata[k];
+        else if (k<m-1)
+            if(xdata[k+1]<px)
+                px=xdata[k+1];
+        if (l==-1)
+            (l,py)=binary_search.binsearch(py,ydata);
+        else if(ydata[l]>py)
+            py=ydata[l];
+        else if (l<n-1)
+            if(ydata[l+1]<py)
+                py=ydata[l+1];
+
+
+    //z(d_x,d_y) = sum_{i=0}^3 sum_{j=0}^3 a_{ij} d_x^id_x^j
+
+        //pre get the squares and cubes of the difference from top-left corner
+
+        double Dx = px-xdata[k];
+        double Dy = py-ydata[l];
+        double[] dx = {1,Dx,Dx*Dx,Dx*Dx*Dx};
+        double[] dy = {1,Dy,Dy*Dy,Dy*Dy*Dy};
+
+        double OUT = 0;
+        for (int i = 1; i <=3; ++i)
+            for (int j = 1; j <=3; ++j)
+            {
+                OUT+=i*j*a[i+j*4+16*l+16*(n-1)*k]*dx[i-1]*dy[j-1];
+            }
+        return OUT;
+    }
     public bool verify_all()
     {
-        return true;
-    /*
-        //Verify that ALL grids fullfill the boundary conditions
-        bool worked = true;
-        for (int i = 0; (i < n-1) && worked; ++i)
-            for (int j = 0; j < m-1; ++j)
+
+        //Verify that ALL grids fullfill the boundary conditions, we need to know what derivatives we do expect
+
+        //Ok, now we neeed to recalculate the derivatives so that we can verify them, a bit wasteful, but at least we only need to verify this once
+
+
+        matrix dxzdata= new matrix(n,m);
+        matrix dyzdata= new matrix(n,m);
+
+        //Calculate dz/dx and dz/dy derivatives, if we are at an edge, the condition is that the double-derivative is 0
+        for (int j = 0; j < m; ++j)
+            for (int i = 0; i < n; ++i)
             {
-                worked = worked && matrix.approx(a[i,j]*x[j]+b[i,j]*y[i]+c[i,j]*x[j]*y[i]+d[i,j],z[i,j]);
-                if (!worked)
-                {
-                    Error.WriteLine($"FAILED to get boundary conditions i,j for rectangle {i},{j}");
-                    break;
-                }
-                worked = worked && matrix.approx(a[i,j]*x[j+1]+b[i,j]*y[i]+c[i,j]*x[j+1]*y[i]+d[i,j],z[i,j+1]);
-                if (!worked)
-                {
-                    Error.WriteLine($"FAILED to get boundary j+1 conditions for rectangle {i},{j}");
-                    break;
-                }
-                worked = worked && matrix.approx(a[i,j]*x[j]+b[i,j]*y[i+1]+c[i,j]*x[j]*y[i+1]+d[i,j],z[i+1,j]);
-                if (!worked)
-                {
-                    Error.WriteLine($"FAILED to get boundary i+1 conditions for rectangle {i},{j}");
-                    break;
-                }
-                worked = worked && matrix.approx(a[i,j]*x[j+1]+b[i,j]*y[i+1]+c[i,j]*x[j+1]*y[i+1]+d[i,j],z[i+1,j+1]);
-                if (!worked)
-                {
-                    Error.WriteLine($"FAILED to get boundary i+1,j+1 conditions for rectangle {i},{j}");
-                    break;
-                }
+
+                    if (j>0 && j < m-1)//Lets go with the average of the slope of a straight line to either neighbour
+                        dxzdata[i,j]=0.5*(zdata[i,j+1]-zdata[i,j])/(xdata[j+1]-xdata[j])+0.5*(zdata[i,j]-zdata[i,j-1])/(xdata[j]-xdata[j-1]);
+                    else if (j==0)//the double-derivative 0 means that the slope get to just continue from the previous neighbourg point
+                        dxzdata[i,j]=(zdata[i,j+1]-zdata[i,j])/(xdata[j+1]-xdata[j]);
+                    else
+                        dxzdata[i,j]=(zdata[i,j]-zdata[i,j-1])/(xdata[j]-xdata[j-1]);
+
+                    if (i>0 && i < n-1)
+                        dyzdata[i,j]=0.5*(zdata[i+1,j]-zdata[i,j])/(ydata[i+1]-ydata[i])+0.5*(zdata[i,j]-zdata[i-1,j])/(ydata[i]-ydata[i-1]);
+                    else if (i==0)
+                        dyzdata[i,j]=(zdata[i+1,j]-zdata[i,j])/(ydata[i+1]-ydata[i]);
+                    else
+                        dyzdata[i,j]=(zdata[i,j]-zdata[i-1,j])/(ydata[i]-ydata[i-1]);
 
 
             }
 
-        return worked;*/
+        matrix dxdyzdata= new matrix(n,m);
+
+        for (int j = 0; j < m; ++j)
+            for (int i = 0; i < n; ++i)
+                if (j>0 && j < m-1)//Lets go with the average of the slope of a straight line to either neighbour
+                    dxdyzdata[i,j]=0.5*(dyzdata[i,j+1]-dyzdata[i,j])/(xdata[j+1]-xdata[j])+0.5*(dyzdata[i,j]-dyzdata[i,j-1])/(xdata[j]-xdata[j-1]);
+                else if (j==0)//the double-derivative 0 means that the slope get to just continue from the previous neighbourg point
+                    dxdyzdata[i,j]=(dyzdata[i,j+1]-dyzdata[i,j])/(xdata[j+1]-xdata[j]);
+                else
+                    dxdyzdata[i,j]=(zdata[i,j]-zdata[i,j-1])/(xdata[j]-xdata[j-1]);
+
+
+        bool worked = true;
+        for (int l = 0; (l < n-1) && worked; ++l)
+            for (int k = 0; k < m-1; ++k)
+            {
+                //For each grid, verify that the functions values are found correctly
+                worked = worked && matrix.approx(interpolate(xdata[k],ydata[l], l,k),zdata[l,k]);
+                if (!worked)
+                {
+                    Error.WriteLine($"FAILED to get expected z, at corner 0,0 for rectangle {l},{k}");
+                    break;
+                }
+                worked = worked && matrix.approx(interpolate_dx(xdata[k],ydata[l], l,k),dxzdata[l,k]);
+                if (!worked)
+                {
+                    Error.WriteLine($"FAILED to get expected dz/dx, at corner 0,0 for rectangle {l},{k}");
+                    break;
+                }
+                worked = worked && matrix.approx(interpolate_dy(xdata[k],ydata[l], l,k),dyzdata[l,k]);
+                if (!worked)
+                {
+                    Error.WriteLine($"FAILED to get expected dz/dy, at corner 0,0 for rectangle {l},{k}");
+                    break;
+                }
+                worked = worked && matrix.approx(interpolate_dxdy(xdata[k],ydata[l], l,k),dxdyzdata[l,k]);
+                if (!worked)
+                {
+                    Error.WriteLine($"FAILED to get expected d^2z/dxdy, at corner 0,0 for rectangle {l},{k}");
+                    break;
+                }
+                //For each grid, verify that the functions values are found correctly
+                worked = worked && matrix.approx(interpolate(xdata[k],ydata[l+1], l,k),zdata[l+1,k]);//DO NOT shift the l,k in the interpolate argument, that forces the interpolator to use THIS rectangle, rather than the next one over, it should be the same in the corner points, but that is what we want to check
+                if (!worked)
+                {
+                    Error.WriteLine($"FAILED to get expected z, at corner 1,0 for rectangle {l},{k}");
+                    break;
+                }
+                worked = worked && matrix.approx(interpolate_dx(xdata[k],ydata[l+1], l,k),dxzdata[l+1,k]);
+                if (!worked)
+                {
+                    Error.WriteLine($"FAILED to get expected dz/dx, at corner 1,0 for rectangle {l},{k}");
+                    break;
+                }
+                worked = worked && matrix.approx(interpolate_dy(xdata[k],ydata[l+1], l,k),dyzdata[l+1,k]);
+                if (!worked)
+                {
+                    Error.WriteLine($"FAILED to get expected dz/dy, at corner 1,0 for rectangle {l},{k}");
+                    break;
+                }
+                worked = worked && matrix.approx(interpolate_dxdy(xdata[k],ydata[l+1], l,k),dxdyzdata[l+1,k]);
+                if (!worked)
+                {
+                    Error.WriteLine($"FAILED to get expected d^2z/dxdy, at corner 1,0 for rectangle {l},{k}");
+                    break;
+                }
+                //For each grid, verify that the functions values are found correctly
+                worked = worked && matrix.approx(interpolate(xdata[k+1],ydata[l], l,k),zdata[l,k+1]);
+                if (!worked)
+                {
+                    Error.WriteLine($"FAILED to get expected z, at corner 0,1 for rectangle {l},{k}");
+                    break;
+                }
+                worked = worked && matrix.approx(interpolate_dx(xdata[k+1],ydata[l], l,k),dxzdata[l,k+1]);
+                if (!worked)
+                {
+                    Error.WriteLine($"FAILED to get expected dz/dx, at corner 0,1 for rectangle {l},{k}");
+                    break;
+                }
+                worked = worked && matrix.approx(interpolate_dy(xdata[k+1],ydata[l], l,k),dyzdata[l,k+1]);
+                if (!worked)
+                {
+                    Error.WriteLine($"FAILED to get expected dz/dy, at corner 0,1 for rectangle {l},{k}");
+                    break;
+                }
+                worked = worked && matrix.approx(interpolate_dxdy(xdata[k+1],ydata[l], l,k),dxdyzdata[l,k+1]);
+                if (!worked)
+                {
+                    Error.WriteLine($"FAILED to get expected d^2z/dxdy, at corner 0,1 for rectangle {l},{k}");
+                    break;
+                }
+                //For each grid, verify that the functions values are found correctly
+                worked = worked && matrix.approx(interpolate(xdata[k+1],ydata[l+1], l,k),zdata[l+1,k+1]);
+                if (!worked)
+                {
+                    Error.WriteLine($"FAILED to get expected z, at corner 1,1 for rectangle {l},{k}");
+                    break;
+                }
+                worked = worked && matrix.approx(interpolate_dx(xdata[k+1],ydata[l+1], l,k),dxzdata[l+1,k+1]);
+                if (!worked)
+                {
+                    Error.WriteLine($"FAILED to get expected dz/dx, at corner 1,1 for rectangle {l},{k}");
+                    break;
+                }
+                worked = worked && matrix.approx(interpolate_dy(xdata[k+1],ydata[l+1], l,k),dyzdata[l+1,k+1]);
+                if (!worked)
+                {
+                    Error.WriteLine($"FAILED to get expected dz/dy, at corner 1,1 for rectangle {l},{k}");
+                    break;
+                }
+                worked = worked && matrix.approx(interpolate_dxdy(xdata[k+1],ydata[l+1], l,k),dxdyzdata[l+1,k+1]);
+                if (!worked)
+                {
+                    Error.WriteLine($"FAILED to get expected d^2z/dxdy, at corner 1,1 for rectangle {l},{k}");
+                    break;
+                }
+
+            }
+
+        return worked;
     }
 
 }

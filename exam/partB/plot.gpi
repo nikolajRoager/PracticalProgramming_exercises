@@ -6,16 +6,28 @@ set ylabel 'Lat (deg)' offset 4.000000 -2.0000 #For unknwoable reason, gnuplot r
 set zlabel 'h (km)' offset 3.000000 -1.0000
 set key below
 set title 'Olympus Mons'
-splot\
+splot [40:53][65:78][-5:25]\
 'OlympusMons_interpolated.tsv' using 1:2:($3/1000)  matrix nonuniform with lines title 'Interpolated data',\
-'OlympusMons_data.tsv' using 1:2:($3/1000)  matrix nonuniform with lp pointsize 2 pointtype 3 title 'Original data'
+'OlympusMons_data.tsv' using 1:2:($3/1000)  matrix nonuniform with points pointsize 1 pointtype 7 title 'Original data'
+set hidden3d
 set output 'OlympusMons_int.png'
 set key below
-set title 'Olympus Mons'
-set hidden3d
-splot\
-'OlympusMons_interpolated.tsv' using 1:2:($3/1000)  matrix nonuniform with lines title 'Interpolated data',\
+set title 'Olympus Mons, bi-cubic interpolated height'
+splot [40:53][65:78][-5:25]\
+'OlympusMons_interpolated.tsv' using 1:2:($3/1000)  matrix nonuniform with lines notitle
+set output 'OlympusMons_above.png'
+set key below
+set view equal xy
+set view map
+set contour
+set cntrparam levels 20
+set ylabel 'Lat (deg)' offset 4.000000 -4.0000 #For unknwoable reason, gnuplot refuses to have offset set to 0 for y
+set title 'Olympus Mons, bi-cubic interpolated height'
+splot [40:53][65:78][-5:25]\
+'OlympusMons_interpolated.tsv' using 1:2:($3/1000)  matrix nonuniform with pm3d notitle
+unset contour
 
+unset hidden3d
 
 set terminal png
 
@@ -32,7 +44,17 @@ splot\
 'VallesMarineris_data.tsv' using 1:2:($3/1000)  matrix nonuniform with points pointsize 1 pointtype 7 title 'Original data'
 set output 'VallesMarineris_int.png'
 set key below
-set title 'Valles Marineris'
 set hidden3d
+set title 'Valles Marineris, bi-cubic interpolated height'
 splot\
-'VallesMarineris_interpolated.tsv' using 1:2:($3/1000)  matrix nonuniform with lines title 'Interpolated data',\
+'VallesMarineris_interpolated.tsv' using 1:2:($3/1000)  matrix nonuniform with lines notitle
+set output 'VallesMarineris_above.png'
+set key below
+set view equal xy
+set view map
+set ylabel 'Lat (deg)' offset 4.000000 -4.0000 #For unknwoable reason, gnuplot refuses to have offset set to 0 for y
+set title 'Valles Marineris, bi-cubic interpolated height'
+set contour
+set cntrparam levels 20
+splot\
+'VallesMarineris_interpolated.tsv' using 1:2:($3/1000)  matrix nonuniform with pm3d notitle
