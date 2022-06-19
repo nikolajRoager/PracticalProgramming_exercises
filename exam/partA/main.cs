@@ -7,13 +7,14 @@ public static class main
 {
     public static int Main(string[] argv)
     {
+        Error.WriteLine("-----------------------------");
         if (argv.Length!=1)
         {
             Error.WriteLine("Input not valid, need 1 argument (input data)");
             return 1;
         }
         //I use the "error" channel for normal logging stuff
-        Error.WriteLine("Loading data");
+        Error.WriteLine($"Loading data: "+argv[0]);
 
 
         //Declare the lists before loading them, I want them to be seen outside the try environment
@@ -134,6 +135,7 @@ public static class main
             }
             Write("\n");
         }
+        Error.WriteLine("-----------------------------");
         return 0;
     }
 

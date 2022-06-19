@@ -1,0 +1,7 @@
+-----------------------------
+Setting up data, build in checkerboard example
+Setting up N-linear interpolation
+Verifying the solution for all boundary conditions ...
+ --- PASS: Solution matches all boundary conditions within relative and absolute error 10^-5
+Calculating and saving high resolution output
+-----------------------------

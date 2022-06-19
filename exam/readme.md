@@ -12,6 +12,23 @@ My Student ID is 201805275, with last two digits 75. There are 23 possible proje
 
 That project is Bi-linear interpolation on a rectilinear grid in two dimensions.
 
+Summary of the project
+------
+Part A: **Build an interpolating routine which takes as the input the vectors {xi} and {yj}, and the matrix {Fi,j} and returns the bi-linear interpolated value of the function at a given 2D-point p=(px,py).** Success, 6 points
+
+Part B: **Implement bi-cubic interpolation**. Success, 3 points
+
+Part C: **Implement N-linear interpolation for a grid with arbitrary dimension N.**, Success, 1 point
+
+In total, 10 points.
+
+In all exercises I have verified that all boundary conditions are sattisfied within a relative and absolute precision of $10^{-5}$, I have also plotted some demonstrative examples.
+
+Data from published research has been used in part A and B, to demonstrate my procedure.
+
+Below follows a more detailed description of what I have done, what exactly my output is, and what third party data has been used to demonstrate my procedure.
+
+
 The Data used to demonstrate this
 ============
 To demonstrate that this is working, I should interpolate some 2D data. I choose to use publicly available terrain elevation data for various features in the continent Tharsis on Mars. The height data used is in Public Domain, (Publisher: GeoScience PDS Node, Author: MOLA Team, Published: 2014, link to data https://astrogeology.usgs.gov/search/map/Mars/GlobalSurveyor/MOLA/Mars\_MGS\_MOLA\_DEM\_mosaic\_global\_463m). The original data is not included anywhere in this repository, as it is more than 2 GB. Instead I have converted the data to a tab-separated list containing the data, which are included in this project.
@@ -22,10 +39,7 @@ The mountain Olympus Mons, a volcano which is the largest mountain in the solar 
 
 The Valles Marineris, a system of canyons through the Tharsis continent on Mars. (Data from 70 deg East to 130 deg East and 20 Deg South to the Equator  NOTE this example is not square, but the output images display it as square, as it better fits inside the image that way, here interpolated between a 48 by 16 point grid).
 
-For part C, I wanted some 3-dimensional data, I choose (real part of) the lowest 3 wavefunctions of hydrogenlowest 3:
-
-\begin{algin}
-\end{align}
+For part C, I wanted some 3-dimensional data, I simply made a 3D checker-board, which I show different 2D slices of, two verify that the interpolation is working in 3D. I originally considered something like Hydrogen wavefunctions, but they really don't look good when downscaled and interpolated.
 
 
 The task
@@ -86,6 +100,15 @@ This is not ideal, I know, and you may consider removing some or all points for 
 
 Task C
 -------
-**Implement N-linear interpolation for a grid with arbitrary dimension N. Show that this is working by implementing the routine in 3 and 4 dimensions, and find a suitible way of visualizing this**
+**Implement N-linear interpolation for a grid with arbitrary dimension N.**
 
-This exercise is easy, visualizing the result, not so much.
+The output is the text file OutC.txt, which verifies the same tests as always, and the 5 images checker0.png to checker4.png, which shows the 3D checkerboard at various evenly spaced slices.
+
+The example I chose highlights that midway between two extremes, I get half the two values, as I should, and that at all points the function value changes linearly, as it should.
+
+
+This should have been easy, but generalizing the formalism to work with arbitrary dimensions proved anything but. And it did require some evil binary trickery for me to loop through all the corners of a N-dimensional hypercube.
+
+I do believe my implementation works for a genereal N-dimensional rectangular grid, though I struggle to visualize the results in a plot. I used evenly spaced slices, and showed these as a heat-map.
+
+One alternative for visualizing 3D functions could be using the Marching cube algorithm to turn it into a solid object at various thresholds -- essentially a 3D version of a contour plot -- or using techniques such as Raytracing to render the function as a translucent cloud -- in much the same way smoke and fog is rendered in modern CG effects. This would, technically, work, and I have previously succeeded in implementing the raytracing method (though in C++ with OpenGL), but I do feel like such plots would be harder to read than 2D slices shown as heatmaps.

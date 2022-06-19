@@ -1,0 +1,30 @@
+set terminal png
+set output 'checker0.png'
+set xlabel 'x (arb u)' offset 0.000000 -4.00000
+set ylabel 'y (arb u)' offset 4.000000 -2.0000 #For unknwoable reason, gnuplot refuses to have offset set to 0 for y
+
+set zlabel 'z (arb u) ' offset 3.000000 -1.0000
+set cbrange [0:1]
+
+set key below
+set view equal xy
+set view map
+set title 'Checker, slice at z = -1.0'
+splot \
+'checker_interpolated.tsv' index 0 using 1:2:3  matrix nonuniform with pm3d notitle
+set output 'checker1.png'
+set title 'Checker, slice at z = -0.5'
+splot \
+'checker_interpolated.tsv' index 1 using 1:2:3  matrix nonuniform with pm3d notitle
+set output 'checker2.png'
+set title 'Checker, slice at z = 0.0'
+splot \
+'checker_interpolated.tsv' index 2 using 1:2:3  matrix nonuniform with pm3d notitle
+set output 'checker3.png'
+set title 'Checker, slice at z = 0.5'
+splot \
+'checker_interpolated.tsv' index 3 using 1:2:3  matrix nonuniform with pm3d notitle
+set output 'checker4.png'
+set title 'Checker, slice at z = 1.0'
+splot \
+'checker_interpolated.tsv' index 4 using 1:2:3  matrix nonuniform with pm3d notitle

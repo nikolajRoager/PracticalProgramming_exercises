@@ -1,10 +1,14 @@
-Loading data
+-----------------------------
+Loading data: OlympusMons_data.tsv
 Setting up bilinear interpolation
 Verifying the solution for all boundary conditions ...
  --- PASS: Solution matches all boundary conditions within relative and absolute error 10^-5
 Calculating and saving high resolution output
-Loading data
+-----------------------------
+-----------------------------
+Loading data: VallesMarineris_data.tsv
 Setting up bilinear interpolation
 Verifying the solution for all boundary conditions ...
  --- PASS: Solution matches all boundary conditions within relative and absolute error 10^-5
 Calculating and saving high resolution output
+-----------------------------
