@@ -20,5 +20,5 @@ partC.exe : partC.cs Makefile
 
 .PHONY : clean
 clean:# a phoney target, can be used to run any commands
-;rm -f $(OUT)/[Oo]ut* $(LOG)/[Ll]og* *.exe
+;rm -f [Oo]ut* [Ll]og* *.exe
 # remove secondary files

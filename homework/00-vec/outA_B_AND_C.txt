@@ -1,25 +1,25 @@
 Testing the vector class
 Testing various printing functions
-(from v.print) v=[-0.17889362415184, -0.143565610622098, 0.973337550228349]
+(from v.print) v=[-0.357508428671053, 0.470056187374672, 0.806991266458282]
 Print with no argument
-[-0.17889362415184, -0.143565610622098, 0.973337550228349]
+[-0.357508428671053, 0.470056187374672, 0.806991266458282]
 vec.print(v)
-[-0.17889362415184, -0.143565610622098, 0.973337550228349]
-using vec.ToString() implicitly [-0.17889362415184,-0.143565610622098,0.973337550228349]
-Testing --v=v ...passed
+[-0.357508428671053, 0.470056187374672, 0.806991266458282]
+using vec.ToString() implicitly [-0.357508428671053,0.470056187374672,0.806991266458282]
+TESTING using 64 random vectorsTesting --v=v using approx ...passed
 
-Testing v+u=u+v ...passed
+Testing v+u=u+v (using approx) ...passed
 
-Testing c*v=v*c ...passed
+Testing c*v=v*c  (using approx) ...passed
 
-Testing c*v/c=v ...passed
+Testing c*v/c=v  (using approx) ...passed
 
-Testing dot(v,u)=v.dot(u) ...passed
+Testing dot(v,u)=v.dot(u)  (using approx) ...passed
 
-Testing dot(v,u+w)=dot(v,u)+dot(v,w) ...passed
+Testing dot(v,u+w)=dot(v,u)+dot(v,w)  (using approx) ...passed
 
-Testing dot(-v,u)=dot(-v,u)=-dot(v,u) ...passed
+Testing dot(-v,u)=dot(-v,u)=-dot(v,u)  (using approx) ...passed
 
-Testing cross(v,u)=-cross(u,v) ...passed
+Testing cross(v,u)=-cross(u,v) (using approx) ...passed
 
 all tests passed

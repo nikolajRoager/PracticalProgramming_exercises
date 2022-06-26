@@ -44,7 +44,8 @@ public static class main
 
         WriteLine("using vec.ToString() implicitly "+V[0]);
 
-        Write("Testing --v=v");
+        Write($"TESTING using {n} random vectors");
+        Write("Testing --v=v using approx");
 
         success=true;
         for(int i=0;i<n;i++)
@@ -60,7 +61,7 @@ public static class main
             return_code += 1;
         }
 
-        Write("Testing v+u=u+v");
+        Write("Testing v+u=u+v (using approx)");
 
         success=true;
         for(int i=0;i<n;i++)
@@ -74,7 +75,7 @@ public static class main
             return_code += 1;
         }
 
-        Write("Testing c*v=v*c");
+        Write("Testing c*v=v*c  (using approx)");
 
         success=true;
         for(int i=0;i<n;i++)
@@ -94,7 +95,7 @@ public static class main
             return_code += 1;
         }
 
-        Write("Testing c*v/c=v");
+        Write("Testing c*v/c=v  (using approx)");
         success=true;
         for(int i=0;i<n;i++)
             for(int j=0;j<n;j++)
@@ -112,7 +113,7 @@ public static class main
             return_code += 1;
         }
 
-        Write("Testing dot(v,u)=v.dot(u)");
+        Write("Testing dot(v,u)=v.dot(u)  (using approx)");
         success=true;
         for(int i=0;i<n;i++)
             for(int j=i;j<n;j++)
@@ -125,7 +126,7 @@ public static class main
             return_code += 1;
         }
 
-        Write("Testing dot(v,u+w)=dot(v,u)+dot(v,w)");
+        Write("Testing dot(v,u+w)=dot(v,u)+dot(v,w)  (using approx)");
         success=true;
         for(int i=0;i<n;i++)
             for(int j=0;j<n;j++)
@@ -140,7 +141,7 @@ public static class main
         }
 
 
-        Write("Testing dot(-v,u)=dot(-v,u)=-dot(v,u)");
+        Write("Testing dot(-v,u)=dot(-v,u)=-dot(v,u)  (using approx)");
         success=true;
         for(int i=0;i<n;i++)
             for(int j=i;j<n;j++)
@@ -158,7 +159,7 @@ public static class main
         }
 
 
-        Write("Testing cross(v,u)=-cross(u,v)");
+        Write("Testing cross(v,u)=-cross(u,v) (using approx)");
         success=true;
         for(int i=0;i<n;i++)
             for(int j=i;j<n;j++)
