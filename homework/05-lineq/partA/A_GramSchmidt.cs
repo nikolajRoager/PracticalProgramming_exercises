@@ -67,17 +67,17 @@ public static class main
 
         Write("   Q^T * Q == 1 ?            ... ");
         if (QTQ.approx(I))
-            WriteLine(" PASSED");
+            WriteLine(" PASSED (within 10^-9)");
         else
             WriteLine(" FAILED");
         Write("   Q * R   == A ?            ... ");
         if (QxR.approx(A))
-            WriteLine(" PASSED");
+            WriteLine(" PASSED (within 10^-9)");
         else
             WriteLine(" FAILED");
         Write("   R is upper triangular   ? ... ");
         if (R.is_uptriangle())
-            WriteLine(" PASSED");
+            WriteLine(" PASSED (within 10^-9)");
         else
             WriteLine(" FAILED");
 
@@ -104,12 +104,12 @@ public static class main
                 ++QRfailed;
         }
 
-        WriteLine($"  {tests-QtQfailed}/{tests} PASSED to have Q^T Q=1;\n  {tests-QRfailed}/{tests} PASSED to have QR=A;\n  {tests-RUTfailed}/{tests} PASSED to have R upper triangular");
+        WriteLine($"  {tests-QtQfailed}/{tests} PASSED to have Q^T Q=1;\n  {tests-QRfailed}/{tests} PASSED to have QR=A;\n  {tests-RUTfailed}/{tests} PASSED to have R upper triangular (All within 10^-9)");
 
         if (QtQfailed!=0 || QRfailed!=0 || RUTfailed!=0)
             WriteLine("QR decomposition FAILED");
         else
-            WriteLine("QR decomposition TEST PASSED");
+            WriteLine("QR decomposition TEST PASSED (All within 10^-9)");
 
         WriteLine("Now trying to solve the following linear system A x=b with");
 
@@ -140,7 +140,7 @@ public static class main
 
         Write("   A*x == b ? ... ");
         if (Ax.approx(b))
-            WriteLine(" PASSED");
+            WriteLine(" PASSED (within 10^-9) ");
         else
             WriteLine(" FAILED");
 
@@ -172,7 +172,7 @@ public static class main
 
 
         if (!(LinEQfailed != 0 || QtQfailed!=0 || QRfailed!=0 || RUTfailed!=0))
-            WriteLine("ALL TESTS PASSED");
+            WriteLine("ALL TESTS PASSED (within 10^-9)  ");
 
         return 0;
     }

@@ -1,16 +1,9 @@
 CSC = mcs
 RUN = mono
 
-all : outA.txt outB.txt time.png
-	cat outA.txt;
-	cat outB.txt
+all : time.png
 
 
-outA.txt: A_GramSchmidt.exe
-	$(RUN) $< 9 3 > $@
-
-outB.txt: B_Inverse.exe
-	$(RUN) $< 6 > $@
 
 time.png: time.tsv time_fit.tsv time_single.tsv time_s_fit.tsv
 	pyxplot plot.gpi
@@ -37,11 +30,6 @@ time.tsv: C_time.exe
 	$(RUN) $< 300 > $@
 
 
-A_GramSchmidt.exe:A_GramSchmidt.cs matrix.dll
-	$(CSC) -target:exe -out:$@  -reference:matrix.dll $<
-
-B_Inverse.exe:B_Inverse.cs matrix.dll
-	$(CSC) -target:exe -out:$@  -reference:matrix.dll $<
 
 C_time.exe:C_time.cs matrix.dll
 	$(CSC) -target:exe -out:$@  -reference:matrix.dll $<

@@ -2,7 +2,7 @@ Homework linear equations
 ===========
 I have done all three parts of the exercise, using randomly generated matrices.
 
-NOTE C is done differently than suggested.
+WARNING int part C I EXPLICITLY CALL I explicitly call `/usr/bin/time`, rather than `time`!!! this is because zsh overwrites time with its own (far inferior) version. IF YOU HAVE NOT INSTALLED THE TIME UTILLITY IN THAT PLACE, THIS WILL FAIL.
 
 
 Part A

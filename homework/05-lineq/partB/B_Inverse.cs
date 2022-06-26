@@ -44,13 +44,14 @@ public static class main
         WriteLine(AinvA.getString(" AA^-1 = ")+"\n");
 
 
-        Write("   A^-1 A= 1 ... ");
+        Write("   AA^-1 = 1 ... ");
         if (AinvA.approx(I))
-            WriteLine(" PASSED");
+            WriteLine(" PASSED (within 10^-9)");
         else
             WriteLine(" FAILED");
+        Write("   A^-1 A= 1 ... ");
         if (invAA.approx(I))
-            WriteLine(" PASSED");
+            WriteLine(" PASSED (within 10^-9)");
         else
             WriteLine(" FAILED");
         return 0;
